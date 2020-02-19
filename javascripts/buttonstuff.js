@@ -16,3 +16,11 @@ for (i = 0; i < acc.length; i++) {
            this.parentNode.nextElementSibling.nextElementSibling.classList.toggle("show");
       }
 }
+var acc = document.getElementsByClassName("material3");
+var i;
+for (i = 0; i < acc.length; i++) {
+    acc[i].onclick = function(){
+           this.classList.toggle("active");
+           this.parentNode.nextElementSibling.nextElementSibling.nextElementSibling.classList.toggle("show");
+      }
+}
