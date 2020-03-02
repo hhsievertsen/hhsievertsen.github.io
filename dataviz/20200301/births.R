@@ -39,7 +39,7 @@ ggplot(df,aes(x=year,y=month))+
         legend.justification = "left",
         legend.title = element_text(size = 18),
         plot.caption = element_text(size = 10))+
-  labs(x = " ",     fill = "Monthly Births per 1000 Population in Denmark, 1901-2019",
+  labs(x = " ",     fill = "Births per 1000 Population in Denmark, 1901-2019",
        caption = "Data source: Statistics Denmark")
 ggsave("fig.png")
   
