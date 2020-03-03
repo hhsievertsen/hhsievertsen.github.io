@@ -27,9 +27,11 @@ ggplot(df,aes(x=date,y=birthrate))+
   stat_stl(s.window = 24,x13_params = list(x11 = "", outlier = NULL))+
   facet_zoom(xy=date <as.yearmon("1953M01","%YM%m")&
                date >as.yearmon("1940M01","%YM%m"), zoom.size = .75,
-             , horizontal = FALSE)+labs(x = " ",     
-                                                    title = "Births in Denmark, 1901-2019",
+              horizontal = FALSE)+labs(x = " ",     
+                                                    title = "The 1940s Baby Boom in Denmark",
                                                     caption = "Data source: Statistics Denmark",y="Births per 1000 population.")+
-  theme_classic()
+  theme_classic()+
+  theme(legend.title = element_text(size = 25),
+        plot.title = element_text(hjust = 0.5))
 ggsave("fig.png") 
   
