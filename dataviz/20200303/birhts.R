@@ -31,7 +31,6 @@ ggplot(df,aes(x=date,y=birthrate))+
                                                     title = "The 1940s Baby Boom in Denmark",
                                                     caption = "Data source: Statistics Denmark",y="Births per 1000 population.")+
   theme_classic()+
-  theme(legend.title = element_text(size = 25),
-        plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(size = 18,hjust = 0.5))
 ggsave("fig.png") 
   
