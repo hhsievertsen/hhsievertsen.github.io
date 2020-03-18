@@ -12,7 +12,7 @@ df<-get_eurostat("demo_fordagec")%>%          # load eurosat data
 
 # create dynamic graph
 my_gif<-ggplot(df%>%filter(year<2013),aes(x=age,y=share,fill=age))+geom_bar(stat="identity")+
-  labs(y="Share in percent",title = 'Ages of first-time mothers in year: {frame_time}',x="Age")+
+  labs(y="Share in percent",title = 'Age of first-time mothers in the UK in year: {frame_time}',x="Age")+
   theme( axis.ticks.x=element_blank(),
   axis.ticks.y=element_blank(),panel.background = element_blank(), panel.grid.major.y = 
   element_line(color = "grey80"))+scale_y_continuous(breaks =seq(0,10,by=2))+
