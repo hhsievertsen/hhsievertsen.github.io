@@ -1,8 +1,6 @@
 # Create a dynamic chart of income shares
 # clear workspace
 rm(list=ls())
-# set working directory
-setwd("C:/Users/hs17922/OneDrive - University of Bristol")
 
 # load data from the World Inequality Database
 # devtools::install_github("WIDworld/wid-r-tool")
