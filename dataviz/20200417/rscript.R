@@ -28,9 +28,9 @@ df<-wid_data%>%
 ggplot(df,aes(x=year,y=value,colour=country))+
   geom_line(size = 1.5)+
   gghighlight(country%in%c("US","IN","FR","GB","RU"))+
-  theme_light()+
+  theme_light(base_size = 25)+
   labs(x="Year", y="Top 1% income share", caption="Source: World Inquality Database", 
        title="Top 1% Income share (all countries)")+
-  coord_cartesian(ylim = c(0, 0.35))
+  coord_cartesian(ylim = c(0, 0.35)) # truncate y axis
 
 ggsave("fig.png")
