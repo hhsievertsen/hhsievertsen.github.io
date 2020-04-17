@@ -1,4 +1,4 @@
-# Income shares in different countries
+# Income shares in different countries, main goal: use gghighlight & coord_cartesian
 # clear workspace
 rm(list=ls())
 # Install packages
@@ -10,13 +10,27 @@ library("tidyverse")
 library("gghighlight")
 wid_data <- download_wid(
   indicators = "sptinc", #  Pre-tax national income 
-  areas = c("AT"), # Countries
+  areas = c("all"), # Countries
   verbose = TRUE,
   perc = c( "p99p100") #Top 1% 
 )
+# select what we want
+df<-wid_data%>%
+  filter(variable=="sptinc992j",
+         str_length(country)==2, # Exclude US states
+         !(country%in%c("QB","QC","QD","QE","QF","QG","QH","QI","QJ","QK",
+                          "QL","QM","QN","QO","QP","QQ","QR","QS","QT","QU","QV","QW","QX","QY")), # Exclude regions
+       ) 
+         
+         
 
 
+ggplot(df,aes(x=year,y=value,colour=country))+
+  geom_line(size = 1.5)+
+  gghighlight(country%in%c("US","IN","FR","GB","RU"))+
+  theme_light()+
+  labs(x="Year", y="Top 1% income share", caption="Source: World Inquality Database", 
+       title="Top 1% Income share (all countries)")+
+  coord_cartesian(ylim = c(0, 0.35))
 
-ggplot(wid_data,aes(x=year,y=value,colour=country))+
-  geom_line()+
-  gghighlight(country=="AT")
+ggsave("fig.png")

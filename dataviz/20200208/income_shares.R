@@ -3,7 +3,7 @@
 rm(list=ls())
 
 # load data from the World Inequality Database
-# devtools::install_github("WIDworld/wid-r-tool")
+# 1devtools::install_github("WIDworld/wid-r-tool")
 # Load the package
 library("wid")
 wid_data <- download_wid(
