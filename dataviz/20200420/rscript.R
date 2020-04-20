@@ -29,7 +29,7 @@ ggplot(df_combined,aes(x=mvote,y=perc))+geom_bar(stat="identity")+
         )+
     labs(x="",y=" ", 
        title="With the economy in lockdown, existing gaps in access to quality education between \n high- and low-income households will be exacerbated. Vote shares (in percent). N=90.",
-       caption="Source: www.igmchicago.org. The chart combines answers from both the European and US panel. Did Not Answer (5.6%).")+
+       caption="Source: www.igmchicago.org. The chart combines answers from both the European and US panel. Did Not Answer (5.6%).\n Note that the wording of the question differed slightly between the European and US panel.")+
   geom_text(aes(label=paste(" ", round(perc),"%",sep="")),hjust=-0.25,size=5)+
   geom_text(aes(y=1,x=1,label="0%"))
 ggsave("fig.png")
