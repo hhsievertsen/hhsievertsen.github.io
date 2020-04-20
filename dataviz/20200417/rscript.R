@@ -1,4 +1,5 @@
 # Income shares in different countries, main goal: use gghighlight & coord_cartesian
+setwd("C:\\Users\\hs17922\\Dropbox\\Work\\Research\\Blandede bolsjer\\igm on education")
 # clear workspace
 rm(list=ls())
 # Install packages

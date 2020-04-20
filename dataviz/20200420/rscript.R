@@ -1,17 +1,12 @@
 # create chart on igm responses, goals: explore data, flipped bar chart, axis labels, 
 # load tidyverse
 library("tidyverse")
-# load us data
-df_us<-read_csv("cleaned_data_US.csv")%>% 
-       filter(Qtext=="Question B: With the economy in lockdown, existing gaps in access to quality education between high- and low-income households will be exacerbated.")%>%
-  select(Qtext,Vote)
-# load european data
-df_eu<-read_csv("cleaned_data_EU.csv")%>% 
-  filter(Qtext=="Question B: With schools across Europe closed in the lockdown, existing gaps in access to quality education between high- and low-income households will be exacerbated.")%>%
-  select(Qtext,Vote)
+setwd("C:\\Github\\hhsievertsen.github.io\\dataviz\\20200420")
+# load data
+df_combined<-read_csv("igm_survey_lockdown_education_inequality.csv")
 
 # calculate percentages
-df_combined<-rbind(df_us,df_eu)%>%
+df_combined<-df_combined%>%
   group_by(Vote) %>%
   summarise(count=n()) %>% 
   mutate(perc=100*count/sum(count))%>%
