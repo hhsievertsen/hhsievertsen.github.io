@@ -36,7 +36,8 @@ ggsave("fig.png")
 
 
 # Create chart without computing percentages first
-df_combined<-rbind(df_us,df_eu)%>%
+df_combined<-read_csv("igm_survey_lockdown_education_inequality.csv")
+df_combined<-df_combined%>%
   mutate(mvote=factor(Vote, levels =c("Strongly Disagree","Disagree","Uncertain","Agree","Strongly Agree", "Did Not Answer")))
 
 ggplot(df_combined,aes(x=mvote))+  geom_bar(aes(y = (..count..)/sum(..count..)))+
@@ -44,6 +45,6 @@ ggplot(df_combined,aes(x=mvote))+  geom_bar(aes(y = (..count..)/sum(..count..)))
   theme_light()+
   ylim(0,0.46)+
   coord_flip()+
-  labs(x="",y="Share in percent ", 
+  labs(x="",y="Share ", 
        title="With the economy in lockdown, existing gaps in access to quality education between \n high- and low-income households will be exacerbated. Vote shares (in percent). ",
        caption="Source: www.igmchicago.org. The chart combines answers from both the European and US panel. ")
