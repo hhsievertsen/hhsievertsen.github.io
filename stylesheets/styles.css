@@ -290,3 +290,8 @@ pre {
 .panel {
     float: left;
 }
+
+.abstractontainer {
+    width: 420px;
+    float: left;
+}
