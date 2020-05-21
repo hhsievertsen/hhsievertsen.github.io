@@ -23,6 +23,28 @@ h6 {
     font-weight: 400;
 }
 
+.wrap {
+    width: 930px;
+    height: 450px;
+    padding: 0;
+    overflow: hidden;
+}
+.frame {
+    width: 1280px;
+    height: 1280px;
+    border: 0;
+    -ms-transform: scale(0.25);
+    -moz-transform: scale(0.25);
+    -o-transform: scale(0.25);
+    -webkit-transform: scale(0.25);
+    transform: scale(0.45);
+
+    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
 p,
 ul,
 ol,
@@ -38,7 +60,9 @@ dl {
     font-weight: bold;
     color: #595853;
 }
-
+li {
+    padding-left: 1em;
+}
 h1,
 h2,
 h3 {
