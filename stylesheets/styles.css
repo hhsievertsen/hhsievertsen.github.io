@@ -24,15 +24,15 @@ h6 {
 }
 
 .wrap {
-    width: 930px;
+    width: 100%;
     height: 450px;
     padding: 0;
     overflow: hidden;
 }
 .frame {
-    width: 1280px;
+    width: 1200px;
     height: 1280px;
-    border: 0;
+       border: 2px;
     -ms-transform: scale(0.25);
     -moz-transform: scale(0.25);
     -o-transform: scale(0.25);
