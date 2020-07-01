@@ -3,7 +3,7 @@ button {
 }
 
 button.material1, button.material2, button.material3 {
-       font-family: "Book Antiqua", serif;
+          font-family:"Trebuchet MS", Helvetica, sans-serif;
       cursor: pointer;
       padding: 0px;
       border: none;

@@ -1,8 +1,7 @@
 body {
     padding: 50px;
-    font-family: "Book Antiqua", serif;
-
-    font-weight: 200;
+    font-family:"Trebuchet MS", Helvetica, sans-serif;
+    font-weight: 00;
     font-size: 13px;
 }
 
@@ -290,7 +289,7 @@ pre {
 }
 
 .papercontainer {
-    width: 70%;
+    width: 90%;
     margin: 0 auto;
     float: left;
 }
@@ -317,7 +316,3 @@ pre {
     float: left;
 }
 
-.abstractontainer {
-    width: 420px;
-    float: left;
-}
