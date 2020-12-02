@@ -316,3 +316,9 @@ pre {
     float: left;
 }
 
+
+.news {
+     padding-left: 5.6em;
+        text-indent:-5.6em;
+         padding-bottom: 0.7em;
+}
