@@ -1,0 +1,172 @@
+---
+title: "Map of votes for FIFA Best Coach of 2020 Votes"
+output: html_document
+fig_width: 14
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,message = FALSE)
+```
+
+*January 4, 2021*
+
+
+## 1. Topics 
+
+- Read table from PDF with *tabulizer*
+- Use google fonts with *showtext*
+- Plot data on maps
+- libraries used: tabulizer, dplyr, janitor, ggplot2, showtext
+
+
+## 2. Get data from pdf into R with tabulizer
+
+I was surprised to see Jürgen Klopp win the FIFA 2020 best coach award ahead of Hans-Dieter Flick. I therefore wanted to study where the votes in favour of Klopp came from. On FIFA's website I found a PDF with all the votes. FIFA obviously don't provide a nice csv, but only this PDF. However, a quick search for an R function that would allow to **extract data from a table in a PDF** was successful. The answer is the `extract_tables()` function from the  [tabulizer](https://cran.r-project.org/web/packages/tabulizer/vignettes/tabulizer.htm) library. Let's see it in action.
+
+```{r }
+# Load library
+library("tabulizer")
+# Load file 
+file <- if (file.exists("votes.pdf")) {
+  "votes.pdf"
+} else {
+  "https://resources.fifa.com/image/upload/men-s-coach.pdf?cloudid=fewk8jzbkqxgjdthofsb"
+}
+# Extract the data from the PDF
+data_from_pdf<- extract_tables(file)
+head(data_from_pdf[[1]])
+```
+This looks promising. With `extract_tables(file)` we were able to extract the tables from the PDF. The tables are stored in a list of character matrices. Let's now convert these list elements into one big data frame.
+
+```{r }
+# Append list of matrices to one data frame
+df<-data.frame(do.call("rbind", data_from_pdf) )
+head(df)
+```
+
+Very good! Let's do some cleaning. 
+
+## 3. Cleaning the data
+
+```{r }
+# Load libraries
+library("dplyr")
+library("janitor")
+# Remove first frame and assign names
+df<-df%>%
+   # Convert first row to column names
+    row_to_names(row_number = 1)%>%  
+   # Rename columns
+    rename(region=Country,p5=contains("First"),p3=contains("Second"),p1=contains("Third"))%>% 
+   # Create a new column with Klopp and Flick voets
+    mutate(Klopp=case_when(p5=="JÃ¼rgen Klopp"~5    ,p3=="JÃ¼rgen Klopp"~3    ,p1=="JÃ¼rgen Klopp"~1,TRUE ~0),
+           Flick=case_when(p5=="Hans-Dieter Flick"~5,p3=="Hans-Dieter Flick"~3,p1=="Hans-Dieter Flick"~1,TRUE ~0))%>%
+  # Select variables that we need
+    select(-p1,-p3,-p5,-Name)
+head(df)
+```
+
+Good! This looks reasonable. I have not create a map for a while, so let us create a map. We need to adjust some of the region names before we can create a map. We also need to collapse Northern Ireland, England, Wales, and Scotland to United Kingdom.
+
+
+```{r }
+# Collapse UK votes to one 
+uk<-df%>%
+    filter(region%in%c("England","Wales", "Northern Ireland", "Scotland"))%>%
+    group_by(Vote)%>%
+    summarise(Klopp=sum(Klopp),Flick=sum(Flick))%>%
+    mutate(region="UK")
+# Append UK to original dataset
+df<-rbind(df,uk)
+# Change country names (this is a bit ad hoc)
+df<-df%>%
+    mutate(region=case_when(region=="Chinese Taipei"~"Taiwan",
+                            region=="China PR"~"China",
+                            region=="Congo"~"Republic of Congo",
+                            region=="Congo DR"~"Democratic Republic of the Congo",
+                            region=="IR Iran"~"Iran",
+                            region=="Antigua and Barbuda"~"Antigua",
+                            region=="CÃ´te d'Ivoire"~"Ivory Coast",
+                            region=="Korea Republic"~"South Korea",
+                            region=="Korea DPR"~"North korea",
+                            region=="Trinidad and Tobago"~"Trinidad",
+                            region=="Republic of Ireland"~"Ireland",
+                            region=="Mozambique"~"Mayotte",
+                            region=="Eswatini"~"Swaziland",
+                            TRUE~region))
+
+```
+
+In the data we have votes from the captain and coach of the national team and from a media representative. We are just going to focus on the sum of the difference in votes for Klopp and the votes for Flick across these three. 
+
+
+```{r }
+# Sum difference in votes
+md<-df%>%
+   mutate(dif=Klopp-Flick)%>%
+   group_by(region)%>%
+   summarise(difference=sum(dif))
+head(md)
+
+```
+
+Excellent! We have a dataset with two columns. The first column contains the country name. The second column the vote difference.
+
+
+## 4. Let's prepare the fonts.
+
+Getting non-standard fonts into my charts in R has always been a pain for me. Especially on Windows systems.  It seems to work a lot easier on Linux systems. Now I am on a Windows system and it was time to check whether there was a new convenient solution. It turns out that [showtext](https://cran.rstudio.com/web/packages/showtext/vignettes/introduction.html) has the potential of becoming a game changer. Let's just follow the default example and add a google font:
+
+
+```{r }
+# Load library
+library("showtext")
+## Add google font
+font_add_google("Schoolbell", "bell")
+showtext_auto()
+
+```
+
+## 5. It is finally time for the map
+
+We have the dataset with the fonts. We have the fonts. Now we need just need a dataset with the values for the polygons. We use `map_data()` from *ggplot2* for that. 
+```{r }
+# Load library
+library("ggplot2")
+# Extract Map data
+world_map <- map_data("world")
+# Merge map data to data on votes
+mapdata <- merge(md, world_map, by = "region",all=TRUE)
+# Cleaning (remove Antarcatica and sort the data)
+mapdata<-mapdata%>%
+        filter(!(region %in% c("Antarctica")))%>%
+        arrange(region,order)
+
+```
+
+And finally it is time for ggplot to do its work:
+
+```{r, out.width = "100%" }
+ggplot(mapdata, aes(x = long, y = lat,group = group)) +
+  geom_polygon(aes(fill=difference))+
+  theme_void()+  coord_quickmap()+
+  scale_fill_gradientn(breaks=seq(-16,13,4),labels=seq(-16,13,4),
+                       colours=c("#bd2626", "grey", "#1a633a"))+
+  theme(legend.position = "bottom",
+        legend.text = element_text(family = "bell"),
+        legend.title = element_text(family = "bell",size=15),
+        plot.caption= element_text(family = "bell",size=11),
+        plot.title = element_text(hjust=0.5,size=25, family = "bell"))+
+  guides(fill = guide_colourbar(ticks = FALSE,
+         title.position = "top", label.hjust = .5,
+         title.hjust = 0.5,nbin=8, raster=F, barwidth=20,
+         label.position = "bottom"))+
+  labs(fill="Points for Klopp minus points for Flick",
+       title="FIFA Best Coach of 2020 Votes",
+       caption="The points are the total across media, coach, and captain.")
+
+```
+
+Voila. 
+
+
