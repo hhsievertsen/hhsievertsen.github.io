@@ -51,7 +51,7 @@ table,
 pre,
 dl {
     color: #222;
-    margin: 0 0 20px;
+    margin: 0px;
 }
 
 .journalname {
@@ -284,8 +284,9 @@ pre {
 
 .paperlevel1 {
     width: 100%;
-    margin: 0 auto;
+       margin: 0 0 20px;
     display: inline-block;
+    
 }
 
 .papercontainer {
