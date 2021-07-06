@@ -3,7 +3,7 @@ button {
 }
 
 button.material1, button.material2, button.material3 {
-          font-family:"Trebuchet MS", Helvetica, sans-serif;
+     font-family: 'EB Garamond', serif;
       cursor: pointer;
       padding: 0px;
       border: none;
@@ -42,4 +42,7 @@ div.panel {
 }
 div.panel.show {
       display: block !important;
+}
+.paperlevel1 a{
+  color: black;
 }

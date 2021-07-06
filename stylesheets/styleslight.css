@@ -1,10 +1,20 @@
 body {
     padding: 50px;
     font-family:"Trebuchet MS", "Helvetica", sans-serif;
+  font-family: 'EB Garamond', serif;
     font-weight: 00;
     font-size: 13px;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
 h1,
 h2,
 h3,
@@ -12,6 +22,11 @@ h4,
 h5 {
     color: #222;
     margin: 0 0 10px;
+        font-family:"Trebuchet MS", "Helvetica", sans-serif;
+}
+h4{
+        font-family:"Trebuchet MS", "Helvetica", sans-serif;
+         margin: 0 0 5px;
 }
 
 h6 {
@@ -320,6 +335,17 @@ pre {
 
 .news {
      padding-left: 5.6em;
-        text-indent:-5.6em;
+        text-indent:-4.8em;
          padding-bottom: 0.7em;
+}
+#news{
+max-height:750px;
+overflow:scroll;
+
+}
+#newsfade {
+position: relative;
+height: 250px;
+margin-top: -250px;
+  background: linear-gradient(transparent, white);
 }

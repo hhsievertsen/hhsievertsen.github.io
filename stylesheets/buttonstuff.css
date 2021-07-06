@@ -3,7 +3,6 @@ button {
 }
 
 button.material1, button.material2, button.material3 {
-      font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
       cursor: pointer;
       padding: 0px;
       border: none;
@@ -14,10 +13,12 @@ button.material1, button.material2, button.material3 {
 
 }
 button.material1.active, button.material1:hover,button.material2.active, button.material2:hover ,button.material3.active, button.material3:hover {
+       font-family: 'EB Garamond', serif;
       background-color: #f8f8f8;
       font-weight:bold;
 }
 button.material1:after,button.material2:after,button.material3:after {
+    font-family: 'EB Garamond', serif;
       font-size: 90%;
       color:#777;
       float: left;
@@ -28,6 +29,7 @@ button.material1.active:after,button.material2.active:after,button.material3.act
 
       }
 div.panel {
+    font-family: 'EB Garamond', serif;
       padding: 0 20px;
       margin-top: 5px;
       display: none;
