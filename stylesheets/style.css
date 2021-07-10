@@ -1,0 +1,133 @@
+/* Globals*/
+body {
+    font-family: 'EB Garamond', serif;
+    font-size: 13px;
+}
+
+h1,h2,h3,h4,h5 {
+    color: #8a0000;
+    margin: 0 0 10px;
+    font-family:"Trebuchet MS", "Helvetica", sans-serif;
+}
+
+.wrapper {
+    width: 950px;
+    margin: 0 auto;
+}
+img {
+    max-width: 100%;
+}
+.papertitle {
+    font-weight: bold;
+}
+header {
+    width: 250px;
+    float: left;
+    position: fixed;
+}
+section {
+    padding-top: 20px;
+    width: 600px;
+    float: right;
+}
+section  a{
+    color: black;
+}
+a {
+    color: #8a0000;
+    font-weight: 400;
+    text-decoration: none;
+}
+p{
+    padding: 0px;
+    margin-top: 0px;
+}
+button {
+    background-color: #FFFFFF;
+    cursor: pointer;
+    padding: 0px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 100%;
+    transition: 0.4s;
+    font-family: 'EB Garamond', serif;
+}
+
+.journalname {
+    display: inline;
+    font-weight: bold;
+    color: #595853;
+}
+  
+
+/* Abstract panel */
+
+.panel {
+    float: left;
+}
+div.panel {
+    font-family: 'EB Garamond', serif;
+      padding: 0 20px;
+      margin-top: 5px;
+      display: none;
+      background-color: white;
+      font-size: 100%;
+      background-color: #F1F1F1; 
+       background-color: white;
+      color: #666; 
+      padding: 10px;
+      text-align: justify;
+
+}
+div.panel.show {
+      display: block !important;
+}
+
+.mainblock{
+    padding-top: 25px;
+    max-height: 500px;
+    overflow: scroll;
+}
+
+/* News */
+.news {
+    padding-left: 5.6em;
+    text-indent:-4.8em;
+    padding-bottom: 0.7em;
+}
+
+
+
+
+@media print,
+screen and (max-width: 960px) {
+    div.wrapper {
+        width: auto;
+        margin: 0;
+    }
+    header,
+    section,
+    footer {
+        float: none;
+        position: static;
+        width: auto;
+    }
+    header {
+        padding-right: 320px;
+    }
+    section {
+        border: 1px solid #e5e5e5;
+        border-width: 1px 0;
+        padding: 20px 0;
+        margin: 0 0 20px;
+    }
+    header a small {
+        display: inline;
+    }
+    header ul {
+        position: absolute;
+        right: 50px;
+        top: 52px;
+    }
+}
