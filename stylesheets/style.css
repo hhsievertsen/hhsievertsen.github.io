@@ -64,9 +64,6 @@ button {
 
 /* Abstract panel */
 
-.panel {
-    float: left;
-}
 div.panel {
     font-family: 'EB Garamond', serif;
       padding: 0 20px;
