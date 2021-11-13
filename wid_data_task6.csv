@@ -1,0 +1,601 @@
+country,percentile,year,value
+Austria,Top 10%,1981,0.3285
+Austria,Top 10%,1981,0.3272
+Austria,Top 10%,1982,0.3293
+Austria,Top 10%,1983,0.3342
+Austria,Top 10%,1984,0.3337
+Austria,Top 10%,1985,0.3322
+Austria,Top 10%,1986,0.3325
+Austria,Top 10%,1987,0.3355
+Austria,Top 10%,1988,0.3349
+Austria,Top 10%,1989,0.3357
+Austria,Top 10%,1990,0.3338
+Austria,Top 10%,1991,0.3328
+Austria,Top 10%,1992,0.3316
+Austria,Top 10%,1993,0.3323
+Austria,Top 10%,1994,0.333
+Austria,Top 10%,1995,0.3305
+Austria,Top 10%,1996,0.333
+Austria,Top 10%,1997,0.3391
+Austria,Top 10%,1998,0.3466
+Austria,Top 10%,1999,0.3294
+Austria,Top 10%,2000,0.3479
+Austria,Top 10%,2001,0.3369
+Austria,Top 10%,2002,0.3471
+Austria,Top 10%,2003,0.3614
+Austria,Top 10%,2004,0.3414
+Austria,Top 10%,2005,0.3549
+Austria,Top 10%,2006,0.3748
+Austria,Top 10%,2007,0.353
+Austria,Top 10%,2008,0.3553
+Austria,Top 10%,2009,0.3424
+Austria,Top 10%,2010,0.3472
+Austria,Top 10%,2011,0.3386
+Austria,Top 10%,2012,0.3189
+Austria,Top 10%,2013,0.3212
+Austria,Top 10%,2014,0.3408
+Austria,Top 10%,2015,0.3331
+Austria,Top 10%,2016,0.3417
+Austria,Top 10%,2017,0.3338
+Austria,Top 10%,2018,0.3352
+Austria,Top 10%,2019,0.3388
+Austria,Top 1%,1980,0.112
+Austria,Top 1%,1981,0.11
+Austria,Top 1%,1982,0.1091
+Austria,Top 1%,1983,0.1109
+Austria,Top 1%,1984,0.1107
+Austria,Top 1%,1985,0.1102
+Austria,Top 1%,1986,0.1101
+Austria,Top 1%,1987,0.1118
+Austria,Top 1%,1988,0.1117
+Austria,Top 1%,1989,0.1118
+Austria,Top 1%,1990,0.1114
+Austria,Top 1%,1991,0.1113
+Austria,Top 1%,1992,0.1108
+Austria,Top 1%,1993,0.1112
+Austria,Top 1%,1994,0.1117
+Austria,Top 1%,1995,0.1101
+Austria,Top 1%,1996,0.1109
+Austria,Top 1%,1997,0.1141
+Austria,Top 1%,1998,0.1188
+Austria,Top 1%,1999,0.1073
+Austria,Top 1%,2000,0.1184
+Austria,Top 1%,2001,0.1125
+Austria,Top 1%,2002,0.1156
+Austria,Top 1%,2003,0.1221
+Austria,Top 1%,2004,0.1148
+Austria,Top 1%,2005,0.1127
+Austria,Top 1%,2006,0.1331
+Austria,Top 1%,2007,0.1149
+Austria,Top 1%,2008,0.1231
+Austria,Top 1%,2009,0.1082
+Austria,Top 1%,2010,0.1137
+Austria,Top 1%,2011,0.1111
+Austria,Top 1%,2012,0.0827
+Austria,Top 1%,2013,0.0896
+Austria,Top 1%,2014,0.111
+Austria,Top 1%,2015,0.1016
+Austria,Top 1%,2016,0.1108
+Austria,Top 1%,2017,0.0988
+Austria,Top 1%,2018,0.0992
+Austria,Top 1%,2019,0.1012
+Austria,Bottom 50%,1980,0.2412
+Austria,Bottom 50%,1981,0.2431
+Austria,Bottom 50%,1982,0.2431
+Austria,Bottom 50%,1983,0.2308
+Austria,Bottom 50%,1984,0.2299
+Austria,Bottom 50%,1985,0.2235
+Austria,Bottom 50%,1986,0.2203
+Austria,Bottom 50%,1987,0.232
+Austria,Bottom 50%,1988,0.2305
+Austria,Bottom 50%,1989,0.2235
+Austria,Bottom 50%,1990,0.2273
+Austria,Bottom 50%,1991,0.2271
+Austria,Bottom 50%,1992,0.2267
+Austria,Bottom 50%,1993,0.2274
+Austria,Bottom 50%,1994,0.2232
+Austria,Bottom 50%,1995,0.2238
+Austria,Bottom 50%,1996,0.2213
+Austria,Bottom 50%,1997,0.2184
+Austria,Bottom 50%,1998,0.2162
+Austria,Bottom 50%,1999,0.226
+Austria,Bottom 50%,2000,0.2175
+Austria,Bottom 50%,2001,0.2249
+Austria,Bottom 50%,2002,0.2154
+Austria,Bottom 50%,2003,0.2113
+Austria,Bottom 50%,2004,0.2185
+Austria,Bottom 50%,2005,0.212
+Austria,Bottom 50%,2006,0.2028
+Austria,Bottom 50%,2007,0.2103
+Austria,Bottom 50%,2008,0.2121
+Austria,Bottom 50%,2009,0.2141
+Austria,Bottom 50%,2010,0.2119
+Austria,Bottom 50%,2011,0.2166
+Austria,Bottom 50%,2012,0.2243
+Austria,Bottom 50%,2013,0.2259
+Austria,Bottom 50%,2014,0.2175
+Austria,Bottom 50%,2015,0.2198
+Austria,Bottom 50%,2016,0.2181
+Austria,Bottom 50%,2017,0.2241
+Austria,Bottom 50%,2018,0.222
+Austria,Bottom 50%,2019,0.2202
+Czech Republic,Top 10%,1980,0.182
+Czech Republic,Top 10%,1981,0.181
+Czech Republic,Top 10%,1982,0.1809
+Czech Republic,Top 10%,1983,0.1804
+Czech Republic,Top 10%,1984,0.1798
+Czech Republic,Top 10%,1985,0.1792
+Czech Republic,Top 10%,1986,0.1812
+Czech Republic,Top 10%,1987,0.182
+Czech Republic,Top 10%,1988,0.1835
+Czech Republic,Top 10%,1989,0.1966
+Czech Republic,Top 10%,1990,0.2087
+Czech Republic,Top 10%,1991,0.2356
+Czech Republic,Top 10%,1992,0.2623
+Czech Republic,Top 10%,1993,0.2842
+Czech Republic,Top 10%,1994,0.2979
+Czech Republic,Top 10%,1995,0.2938
+Czech Republic,Top 10%,1996,0.299
+Czech Republic,Top 10%,1997,0.2864
+Czech Republic,Top 10%,1998,0.306
+Czech Republic,Top 10%,1999,0.3025
+Czech Republic,Top 10%,2000,0.3001
+Czech Republic,Top 10%,2001,0.2997
+Czech Republic,Top 10%,2002,0.2923
+Czech Republic,Top 10%,2003,0.2972
+Czech Republic,Top 10%,2004,0.2977
+Czech Republic,Top 10%,2005,0.3014
+Czech Republic,Top 10%,2006,0.3017
+Czech Republic,Top 10%,2007,0.3027
+Czech Republic,Top 10%,2008,0.3215
+Czech Republic,Top 10%,2009,0.2984
+Czech Republic,Top 10%,2010,0.2978
+Czech Republic,Top 10%,2011,0.29
+Czech Republic,Top 10%,2012,0.3033
+Czech Republic,Top 10%,2013,0.2966
+Czech Republic,Top 10%,2014,0.3029
+Czech Republic,Top 10%,2015,0.3072
+Czech Republic,Top 10%,2016,0.2979
+Czech Republic,Top 10%,2017,0.2953
+Czech Republic,Top 10%,2018,0.2877
+Czech Republic,Top 10%,2019,0.2854
+Czech Republic,Top 1%,1980,0.0257
+Czech Republic,Top 1%,1981,0.0255
+Czech Republic,Top 1%,1982,0.0254
+Czech Republic,Top 1%,1983,0.0254
+Czech Republic,Top 1%,1984,0.0253
+Czech Republic,Top 1%,1985,0.0252
+Czech Republic,Top 1%,1986,0.0267
+Czech Republic,Top 1%,1987,0.0281
+Czech Republic,Top 1%,1988,0.0295
+Czech Republic,Top 1%,1989,0.0383
+Czech Republic,Top 1%,1990,0.0471
+Czech Republic,Top 1%,1991,0.0673
+Czech Republic,Top 1%,1992,0.0879
+Czech Republic,Top 1%,1993,0.1036
+Czech Republic,Top 1%,1994,0.1127
+Czech Republic,Top 1%,1995,0.1079
+Czech Republic,Top 1%,1996,0.1095
+Czech Republic,Top 1%,1997,0.1007
+Czech Republic,Top 1%,1998,0.1151
+Czech Republic,Top 1%,1999,0.1125
+Czech Republic,Top 1%,2000,0.1107
+Czech Republic,Top 1%,2001,0.1115
+Czech Republic,Top 1%,2002,0.106
+Czech Republic,Top 1%,2003,0.1069
+Czech Republic,Top 1%,2004,0.1082
+Czech Republic,Top 1%,2005,0.1155
+Czech Republic,Top 1%,2006,0.1055
+Czech Republic,Top 1%,2007,0.1129
+Czech Republic,Top 1%,2008,0.1356
+Czech Republic,Top 1%,2009,0.1139
+Czech Republic,Top 1%,2010,0.1073
+Czech Republic,Top 1%,2011,0.1031
+Czech Republic,Top 1%,2012,0.1114
+Czech Republic,Top 1%,2013,0.1041
+Czech Republic,Top 1%,2014,0.1061
+Czech Republic,Top 1%,2015,0.1122
+Czech Republic,Top 1%,2016,0.1077
+Czech Republic,Top 1%,2017,0.1073
+Czech Republic,Top 1%,2018,0.102
+Czech Republic,Top 1%,2019,0.1002
+Czech Republic,Bottom 50%,1980,0.3082
+Czech Republic,Bottom 50%,1981,0.3123
+Czech Republic,Bottom 50%,1982,0.312
+Czech Republic,Bottom 50%,1983,0.3126
+Czech Republic,Bottom 50%,1984,0.314
+Czech Republic,Bottom 50%,1985,0.3146
+Czech Republic,Bottom 50%,1986,0.3127
+Czech Republic,Bottom 50%,1987,0.3155
+Czech Republic,Bottom 50%,1988,0.3145
+Czech Republic,Bottom 50%,1989,0.3099
+Czech Republic,Bottom 50%,1990,0.3016
+Czech Republic,Bottom 50%,1991,0.2907
+Czech Republic,Bottom 50%,1992,0.2746
+Czech Republic,Bottom 50%,1993,0.261
+Czech Republic,Bottom 50%,1994,0.2523
+Czech Republic,Bottom 50%,1995,0.2559
+Czech Republic,Bottom 50%,1996,0.25
+Czech Republic,Bottom 50%,1997,0.2595
+Czech Republic,Bottom 50%,1998,0.2496
+Czech Republic,Bottom 50%,1999,0.2494
+Czech Republic,Bottom 50%,2000,0.2533
+Czech Republic,Bottom 50%,2001,0.2548
+Czech Republic,Bottom 50%,2002,0.2593
+Czech Republic,Bottom 50%,2003,0.2531
+Czech Republic,Bottom 50%,2004,0.2514
+Czech Republic,Bottom 50%,2005,0.2525
+Czech Republic,Bottom 50%,2006,0.2465
+Czech Republic,Bottom 50%,2007,0.249
+Czech Republic,Bottom 50%,2008,0.2421
+Czech Republic,Bottom 50%,2009,0.2548
+Czech Republic,Bottom 50%,2010,0.2508
+Czech Republic,Bottom 50%,2011,0.2604
+Czech Republic,Bottom 50%,2012,0.2531
+Czech Republic,Bottom 50%,2013,0.2611
+Czech Republic,Bottom 50%,2014,0.2506
+Czech Republic,Bottom 50%,2015,0.2456
+Czech Republic,Bottom 50%,2016,0.254
+Czech Republic,Bottom 50%,2017,0.2518
+Czech Republic,Bottom 50%,2018,0.2537
+Czech Republic,Bottom 50%,2019,0.255
+Poland,Top 10%,1980,0.2247
+Poland,Top 10%,1981,0.2247
+Poland,Top 10%,1982,0.2247
+Poland,Top 10%,1983,0.2247
+Poland,Top 10%,1984,0.2316
+Poland,Top 10%,1985,0.2275
+Poland,Top 10%,1986,0.2272
+Poland,Top 10%,1987,0.222
+Poland,Top 10%,1988,0.2189
+Poland,Top 10%,1989,0.2317
+Poland,Top 10%,1990,0.2442
+Poland,Top 10%,1991,0.2601
+Poland,Top 10%,1992,0.2586
+Poland,Top 10%,1993,0.2649
+Poland,Top 10%,1994,0.2871
+Poland,Top 10%,1995,0.3108
+Poland,Top 10%,1996,0.3086
+Poland,Top 10%,1997,0.3083
+Poland,Top 10%,1998,0.3228
+Poland,Top 10%,1999,0.3194
+Poland,Top 10%,2000,0.3329
+Poland,Top 10%,2001,0.333
+Poland,Top 10%,2002,0.3424
+Poland,Top 10%,2003,0.352
+Poland,Top 10%,2004,0.3631
+Poland,Top 10%,2005,0.3622
+Poland,Top 10%,2006,0.3705
+Poland,Top 10%,2007,0.3719
+Poland,Top 10%,2008,0.3783
+Poland,Top 10%,2009,0.3644
+Poland,Top 10%,2010,0.3662
+Poland,Top 10%,2011,0.3698
+Poland,Top 10%,2012,0.3674
+Poland,Top 10%,2013,0.3658
+Poland,Top 10%,2014,0.3726
+Poland,Top 10%,2015,0.3778
+Poland,Top 10%,2016,0.3743
+Poland,Top 10%,2017,0.371
+Poland,Top 10%,2018,0.3746
+Poland,Top 10%,2019,0.3764
+Poland,Top 1%,1980,0.0435
+Poland,Top 1%,1981,0.0435
+Poland,Top 1%,1982,0.0435
+Poland,Top 1%,1983,0.0435
+Poland,Top 1%,1984,0.0487
+Poland,Top 1%,1985,0.043
+Poland,Top 1%,1986,0.0428
+Poland,Top 1%,1987,0.0439
+Poland,Top 1%,1988,0.0423
+Poland,Top 1%,1989,0.0451
+Poland,Top 1%,1990,0.0551
+Poland,Top 1%,1991,0.0663
+Poland,Top 1%,1992,0.0761
+Poland,Top 1%,1993,0.0818
+Poland,Top 1%,1994,0.0971
+Poland,Top 1%,1995,0.1106
+Poland,Top 1%,1996,0.09
+Poland,Top 1%,1997,0.0977
+Poland,Top 1%,1998,0.1092
+Poland,Top 1%,1999,0.1071
+Poland,Top 1%,2000,0.1042
+Poland,Top 1%,2001,0.0996
+Poland,Top 1%,2002,0.104
+Poland,Top 1%,2003,0.1021
+Poland,Top 1%,2004,0.1292
+Poland,Top 1%,2005,0.1352
+Poland,Top 1%,2006,0.1424
+Poland,Top 1%,2007,0.1576
+Poland,Top 1%,2008,0.1493
+Poland,Top 1%,2009,0.1363
+Poland,Top 1%,2010,0.1342
+Poland,Top 1%,2011,0.1394
+Poland,Top 1%,2012,0.1386
+Poland,Top 1%,2013,0.1362
+Poland,Top 1%,2014,0.1426
+Poland,Top 1%,2015,0.1491
+Poland,Top 1%,2016,0.1472
+Poland,Top 1%,2017,0.1452
+Poland,Top 1%,2018,0.1465
+Poland,Top 1%,2019,0.1479
+Poland,Bottom 50%,1980,0.2792
+Poland,Bottom 50%,1981,0.2792
+Poland,Bottom 50%,1982,0.2792
+Poland,Bottom 50%,1983,0.2792
+Poland,Bottom 50%,1984,0.2769
+Poland,Bottom 50%,1985,0.2773
+Poland,Bottom 50%,1986,0.2734
+Poland,Bottom 50%,1987,0.2822
+Poland,Bottom 50%,1988,0.2842
+Poland,Bottom 50%,1989,0.2755
+Poland,Bottom 50%,1990,0.2696
+Poland,Bottom 50%,1991,0.2586
+Poland,Bottom 50%,1992,0.2556
+Poland,Bottom 50%,1993,0.2523
+Poland,Bottom 50%,1994,0.2433
+Poland,Bottom 50%,1995,0.2322
+Poland,Bottom 50%,1996,0.2294
+Poland,Bottom 50%,1997,0.2309
+Poland,Bottom 50%,1998,0.2246
+Poland,Bottom 50%,1999,0.2273
+Poland,Bottom 50%,2000,0.2188
+Poland,Bottom 50%,2001,0.2162
+Poland,Bottom 50%,2002,0.2106
+Poland,Bottom 50%,2003,0.2032
+Poland,Bottom 50%,2004,0.2012
+Poland,Bottom 50%,2005,0.1951
+Poland,Bottom 50%,2006,0.1977
+Poland,Bottom 50%,2007,0.199
+Poland,Bottom 50%,2008,0.1955
+Poland,Bottom 50%,2009,0.1989
+Poland,Bottom 50%,2010,0.2002
+Poland,Bottom 50%,2011,0.1989
+Poland,Bottom 50%,2012,0.2018
+Poland,Bottom 50%,2013,0.2019
+Poland,Bottom 50%,2014,0.2004
+Poland,Bottom 50%,2015,0.1984
+Poland,Bottom 50%,2016,0.1978
+Poland,Bottom 50%,2017,0.2003
+Poland,Bottom 50%,2018,0.196
+Poland,Bottom 50%,2019,0.1952
+Sweden,Top 10%,1980,0.2563
+Sweden,Top 10%,1981,0.2555
+Sweden,Top 10%,1982,0.2657
+Sweden,Top 10%,1983,0.2696
+Sweden,Top 10%,1984,0.2824
+Sweden,Top 10%,1985,0.2805
+Sweden,Top 10%,1986,0.2794
+Sweden,Top 10%,1987,0.2796
+Sweden,Top 10%,1988,0.2865
+Sweden,Top 10%,1989,0.2788
+Sweden,Top 10%,1990,0.2644
+Sweden,Top 10%,1991,0.2703
+Sweden,Top 10%,1992,0.2676
+Sweden,Top 10%,1993,0.2764
+Sweden,Top 10%,1994,0.3051
+Sweden,Top 10%,1995,0.313
+Sweden,Top 10%,1996,0.305
+Sweden,Top 10%,1997,0.3156
+Sweden,Top 10%,1998,0.3162
+Sweden,Top 10%,1999,0.3183
+Sweden,Top 10%,2000,0.3092
+Sweden,Top 10%,2001,0.2965
+Sweden,Top 10%,2002,0.2996
+Sweden,Top 10%,2003,0.3109
+Sweden,Top 10%,2004,0.316
+Sweden,Top 10%,2005,0.3246
+Sweden,Top 10%,2006,0.3355
+Sweden,Top 10%,2007,0.3286
+Sweden,Top 10%,2008,0.3179
+Sweden,Top 10%,2009,0.3028
+Sweden,Top 10%,2010,0.3144
+Sweden,Top 10%,2011,0.3092
+Sweden,Top 10%,2012,0.298
+Sweden,Top 10%,2013,0.2989
+Sweden,Top 10%,2014,0.3014
+Sweden,Top 10%,2015,0.3096
+Sweden,Top 10%,2016,0.2924
+Sweden,Top 10%,2017,0.3014
+Sweden,Top 10%,2018,0.2945
+Sweden,Top 10%,2019,0.2961
+Sweden,Top 1%,1980,0.0712
+Sweden,Top 1%,1981,0.0726
+Sweden,Top 1%,1982,0.0824
+Sweden,Top 1%,1983,0.0858
+Sweden,Top 1%,1984,0.0977
+Sweden,Top 1%,1985,0.0956
+Sweden,Top 1%,1986,0.0939
+Sweden,Top 1%,1987,0.0944
+Sweden,Top 1%,1988,0.1013
+Sweden,Top 1%,1989,0.0948
+Sweden,Top 1%,1990,0.08
+Sweden,Top 1%,1991,0.0797
+Sweden,Top 1%,1992,0.0775
+Sweden,Top 1%,1993,0.0847
+Sweden,Top 1%,1994,0.1075
+Sweden,Top 1%,1995,0.1154
+Sweden,Top 1%,1996,0.105
+Sweden,Top 1%,1997,0.1137
+Sweden,Top 1%,1998,0.1151
+Sweden,Top 1%,1999,0.1167
+Sweden,Top 1%,2000,0.1009
+Sweden,Top 1%,2001,0.0877
+Sweden,Top 1%,2002,0.0914
+Sweden,Top 1%,2003,0.1047
+Sweden,Top 1%,2004,0.111
+Sweden,Top 1%,2005,0.1162
+Sweden,Top 1%,2006,0.1274
+Sweden,Top 1%,2007,0.1224
+Sweden,Top 1%,2008,0.1121
+Sweden,Top 1%,2009,0.0968
+Sweden,Top 1%,2010,0.1094
+Sweden,Top 1%,2011,0.1038
+Sweden,Top 1%,2012,0.0976
+Sweden,Top 1%,2013,0.0977
+Sweden,Top 1%,2014,0.0989
+Sweden,Top 1%,2015,0.1039
+Sweden,Top 1%,2016,0.0908
+Sweden,Top 1%,2017,0.0984
+Sweden,Top 1%,2018,0.094
+Sweden,Top 1%,2019,0.0954
+Sweden,Bottom 50%,1980,0.2662
+Sweden,Bottom 50%,1981,0.2686
+Sweden,Bottom 50%,1982,0.2645
+Sweden,Bottom 50%,1983,0.2632
+Sweden,Bottom 50%,1984,0.2598
+Sweden,Bottom 50%,1985,0.2597
+Sweden,Bottom 50%,1986,0.2607
+Sweden,Bottom 50%,1987,0.26
+Sweden,Bottom 50%,1988,0.2575
+Sweden,Bottom 50%,1989,0.2617
+Sweden,Bottom 50%,1990,0.2654
+Sweden,Bottom 50%,1991,0.2624
+Sweden,Bottom 50%,1992,0.2645
+Sweden,Bottom 50%,1993,0.2603
+Sweden,Bottom 50%,1994,0.2523
+Sweden,Bottom 50%,1995,0.247
+Sweden,Bottom 50%,1996,0.25
+Sweden,Bottom 50%,1997,0.2444
+Sweden,Bottom 50%,1998,0.2437
+Sweden,Bottom 50%,1999,0.2408
+Sweden,Bottom 50%,2000,0.253
+Sweden,Bottom 50%,2001,0.2565
+Sweden,Bottom 50%,2002,0.2558
+Sweden,Bottom 50%,2003,0.2508
+Sweden,Bottom 50%,2004,0.2496
+Sweden,Bottom 50%,2005,0.2427
+Sweden,Bottom 50%,2006,0.2392
+Sweden,Bottom 50%,2007,0.2362
+Sweden,Bottom 50%,2008,0.238
+Sweden,Bottom 50%,2009,0.2386
+Sweden,Bottom 50%,2010,0.2286
+Sweden,Bottom 50%,2011,0.2323
+Sweden,Bottom 50%,2012,0.2463
+Sweden,Bottom 50%,2013,0.245
+Sweden,Bottom 50%,2014,0.2404
+Sweden,Bottom 50%,2015,0.2358
+Sweden,Bottom 50%,2016,0.2434
+Sweden,Bottom 50%,2017,0.2413
+Sweden,Bottom 50%,2018,0.2432
+Sweden,Bottom 50%,2019,0.2426
+United Kingdom,Top 10%,1980,0.2903
+United Kingdom,Top 10%,1981,0.2903
+United Kingdom,Top 10%,1982,0.2908
+United Kingdom,Top 10%,1983,0.2957
+United Kingdom,Top 10%,1984,0.3017
+United Kingdom,Top 10%,1985,0.3027
+United Kingdom,Top 10%,1986,0.3051
+United Kingdom,Top 10%,1987,0.3078
+United Kingdom,Top 10%,1988,0.314
+United Kingdom,Top 10%,1989,0.3096
+United Kingdom,Top 10%,1990,0.3239
+United Kingdom,Top 10%,1991,0.3247
+United Kingdom,Top 10%,1992,0.3222
+United Kingdom,Top 10%,1993,0.3333
+United Kingdom,Top 10%,1994,0.342
+United Kingdom,Top 10%,1995,0.3434
+United Kingdom,Top 10%,1996,0.355
+United Kingdom,Top 10%,1997,0.354
+United Kingdom,Top 10%,1998,0.3635
+United Kingdom,Top 10%,1999,0.3659
+United Kingdom,Top 10%,2000,0.3586
+United Kingdom,Top 10%,2001,0.3618
+United Kingdom,Top 10%,2002,0.3645
+United Kingdom,Top 10%,2003,0.3758
+United Kingdom,Top 10%,2004,0.3702
+United Kingdom,Top 10%,2005,0.3815
+United Kingdom,Top 10%,2006,0.3849
+United Kingdom,Top 10%,2007,0.3857
+United Kingdom,Top 10%,2008,0.3689
+United Kingdom,Top 10%,2009,0.385
+United Kingdom,Top 10%,2010,0.3464
+United Kingdom,Top 10%,2011,0.3554
+United Kingdom,Top 10%,2012,0.3647
+United Kingdom,Top 10%,2013,0.3866
+United Kingdom,Top 10%,2014,0.3669
+United Kingdom,Top 10%,2015,0.356
+United Kingdom,Top 10%,2016,0.3562
+United Kingdom,Top 10%,2017,0.3592
+United Kingdom,Top 10%,2018,0.3593
+United Kingdom,Top 10%,2019,0.3564
+United Kingdom,Top 1%,1980,0.0718
+United Kingdom,Top 1%,1981,0.0718
+United Kingdom,Top 1%,1982,0.073
+United Kingdom,Top 1%,1983,0.0727
+United Kingdom,Top 1%,1984,0.0752
+United Kingdom,Top 1%,1985,0.0772
+United Kingdom,Top 1%,1986,0.0783
+United Kingdom,Top 1%,1987,0.0811
+United Kingdom,Top 1%,1988,0.0858
+United Kingdom,Top 1%,1989,0.0814
+United Kingdom,Top 1%,1990,0.0816
+United Kingdom,Top 1%,1991,0.0817
+United Kingdom,Top 1%,1992,0.0769
+United Kingdom,Top 1%,1993,0.0868
+United Kingdom,Top 1%,1994,0.099
+United Kingdom,Top 1%,1995,0.1003
+United Kingdom,Top 1%,1996,0.1147
+United Kingdom,Top 1%,1997,0.1192
+United Kingdom,Top 1%,1998,0.1281
+United Kingdom,Top 1%,1999,0.1204
+United Kingdom,Top 1%,2000,0.1159
+United Kingdom,Top 1%,2001,0.1154
+United Kingdom,Top 1%,2002,0.119
+United Kingdom,Top 1%,2003,0.1297
+United Kingdom,Top 1%,2004,0.1284
+United Kingdom,Top 1%,2005,0.141
+United Kingdom,Top 1%,2006,0.145
+United Kingdom,Top 1%,2007,0.1455
+United Kingdom,Top 1%,2008,0.1395
+United Kingdom,Top 1%,2009,0.1417
+United Kingdom,Top 1%,2010,0.1215
+United Kingdom,Top 1%,2011,0.1302
+United Kingdom,Top 1%,2012,0.1263
+United Kingdom,Top 1%,2013,0.1369
+United Kingdom,Top 1%,2014,0.1323
+United Kingdom,Top 1%,2015,0.1225
+United Kingdom,Top 1%,2016,0.1241
+United Kingdom,Top 1%,2017,0.133
+United Kingdom,Top 1%,2018,0.1296
+United Kingdom,Top 1%,2019,0.126
+United Kingdom,Bottom 50%,1980,0.2213
+United Kingdom,Bottom 50%,1981,0.2213
+United Kingdom,Bottom 50%,1982,0.2202
+United Kingdom,Bottom 50%,1983,0.2176
+United Kingdom,Bottom 50%,1984,0.2139
+United Kingdom,Bottom 50%,1985,0.2111
+United Kingdom,Bottom 50%,1986,0.2103
+United Kingdom,Bottom 50%,1987,0.2064
+United Kingdom,Bottom 50%,1988,0.2037
+United Kingdom,Bottom 50%,1989,0.2067
+United Kingdom,Bottom 50%,1990,0.1941
+United Kingdom,Bottom 50%,1991,0.1922
+United Kingdom,Bottom 50%,1992,0.1953
+United Kingdom,Bottom 50%,1993,0.192
+United Kingdom,Bottom 50%,1994,0.1922
+United Kingdom,Bottom 50%,1995,0.1877
+United Kingdom,Bottom 50%,1996,0.1888
+United Kingdom,Bottom 50%,1997,0.1908
+United Kingdom,Bottom 50%,1998,0.1867
+United Kingdom,Bottom 50%,1999,0.1824
+United Kingdom,Bottom 50%,2000,0.1907
+United Kingdom,Bottom 50%,2001,0.186
+United Kingdom,Bottom 50%,2002,0.1854
+United Kingdom,Bottom 50%,2003,0.1814
+United Kingdom,Bottom 50%,2004,0.1854
+United Kingdom,Bottom 50%,2005,0.1833
+United Kingdom,Bottom 50%,2006,0.181
+United Kingdom,Bottom 50%,2007,0.1843
+United Kingdom,Bottom 50%,2008,0.1869
+United Kingdom,Bottom 50%,2009,0.1769
+United Kingdom,Bottom 50%,2010,0.1986
+United Kingdom,Bottom 50%,2011,0.1955
+United Kingdom,Bottom 50%,2012,0.1887
+United Kingdom,Bottom 50%,2013,0.1835
+United Kingdom,Bottom 50%,2014,0.1939
+United Kingdom,Bottom 50%,2015,0.199
+United Kingdom,Bottom 50%,2016,0.2006
+United Kingdom,Bottom 50%,2017,0.2042
+United Kingdom,Bottom 50%,2018,0.2027
+United Kingdom,Bottom 50%,2019,0.2036
