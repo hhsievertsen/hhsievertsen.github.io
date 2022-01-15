@@ -4,7 +4,6 @@ setwd("/Users/hhs/Dropbox/My Mac (Hanss-MacBook-Air.local)/Documents/GitHub/hhsi
 # Load libraries 
 library("tidyverse")
 library("readxl")
-library("artyfarty")
 # Load main data file from the World Bank
 df<-read_excel("Data_Extract_From_World_Development_Indicators.xlsx",sheet="Data")
 # Remove missing values 
@@ -40,7 +39,6 @@ df<-filter(df,!is.na(IncomeGroup))
 ggplot(df, aes(x=PovertyHC, y=LifeExpectancy,
                colour=IncomeGroup,size=PovertyGAP))+
   geom_jitter(width=.1,height=.1)+
-  theme_farty()+
   labs(title="Life expectancy and extreme poverty",
        caption="Data source: The World Bank. Each scatter is a country. Data is for the most recent year within the period 2011-2020. ",
        x="Share of the population w. daily income <5.5$",
@@ -49,6 +47,9 @@ ggplot(df, aes(x=PovertyHC, y=LifeExpectancy,
         legend.title=element_text(colour="#6e6e6e",size=8),
         legend.key.height= unit(.25, 'cm'),
         legend.key.width= unit(.25, 'cm'),
+       panel.background = element_blank(),
+       panel.grid.major=element_line(color="grey",size=0.1),
+              panel.grid.minor=element_line(color="grey",size=0.1),
         plot.caption = element_text(hjust=0,colour="#6e6e6e",size=8) )+
   scale_color_manual(values=c("#999999", "#63a875","#E69F00", "#56B4E9"))+
   theme(legend.direction = "horizontal", legend.box = "vertical",
