@@ -1,5 +1,7 @@
 ---
-title: "Data analysis for the Data"
+title: "Charts for the FFT Education Datalab conference 2022"
+author: "Hans Henrik Sievertsen"
+affiliation: "University of Bristol"
 output:
     html_document:
       toc: true
@@ -14,7 +16,13 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 rm(list=ls())
 ```
-## Preparations
+
+
+This file creates all charts used for my presentation at the FFT Education Datalab Virtual Research Conference, March 2022.
+The source files are available here: https://github.com/hhsievertsen/hhsievertsen.github.io/tree/master/dataviz/20220324 
+
+
+# Preparation
 
 First we load necessary libraries and fonts
 
@@ -47,14 +55,14 @@ theme_hhs <- function(){
                                  vjust=0, margin=margin(0,-15,0,0)),
         axis.title=element_text( color="#545454"),
         legend.text = element_text( color="#545454"),
-        plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=30),
+        plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=20),
         plot.caption=element_text(color="#545454",angle = 0)
         )
 }
 
 theme_hhs_lines <- function(){ 
   theme_bw()
-  theme(plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=30),
+  theme(plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=20),
         plot.caption=element_text(color="#545454",angle = 0),
         panel.grid=element_line(color="#dedede"),
         panel.border = element_blank(),legend.position=c(0.9,0.9),
@@ -72,11 +80,11 @@ theme_hhs_lines <- function(){
 ```
 
 
-## Data cleaning
+# Data cleaning
 
-### Load raw data
+## Load raw data
 
-#### School closure data 
+### School closure data 
 
 Load data on closures from the UNESCO
 The source is: https://en.unesco.org/covid19/educationresponse#schoolclosures 
@@ -87,7 +95,7 @@ daily_closures<-read_csv("rawdata/total school closures/Full dataset - Master fi
                 select(LOCATION,Status,Date)
 ```
 
-#### Enrollment data
+### Enrollment data
 
 Load data on enrollment from UNESCO. The source is: http://data.uis.unesco.org/#. I've downloaded data from 2010-2021 and I am going to use the most recent data until 2020. This is a source of measurement error, but I believe the best we can do. 
 
@@ -102,7 +110,7 @@ enrollment<-read_csv("rawdata/enrollment/NATMON_DS_17032022055529801.csv")%>%
             filter(row_number()==n())%>%
             select(LOCATION,Enrollment)
 ```
-#### Country groups
+### Country groups
 
 The data comes from the International Labour organisation and enables us to map countries into regions by area (for example by continent) or income group (for example by high vs. low income groups). The data source is https://ilostat.ilo.org/resources/concepts-and-definitions/classification-country-groupings/. 
 
@@ -112,7 +120,7 @@ regions<-read_csv("rawdata/countrycodes/countries_en.csv")%>%
          rename(LOCATION=`ISO3 Code`,Region=`ILO Subregion - Broad`,Group=starts_with("World"))
 ```
 
-#### Average schooling
+### Average schooling
 The data comes from the UNDP. The data source is http://hdr.undp.org/en/indicators/103006#. 
 Definition: "Average number of years of education received by people ages 25 and older, converted from education attainment levels using official durations of each level." (from the metadata). 
 
@@ -137,7 +145,7 @@ schooling<-read_csv("rawdata/yearsofschooling/Mean years of schooling (years).cs
 ```
 
 
-### Combine data
+## Combine data
 
 We now merge the data in one dataset
 
@@ -152,9 +160,9 @@ df<-merge(df,schooling,by="Country",all.x=T)
 
 ```
 
-### Create datasets for analysis
+## Create datasets for analysis
 
-#### Daily aggregate country level data
+### Daily aggregate country level data
 
 Here we get how many countries that are affected at any given day. 
 
@@ -183,7 +191,7 @@ df_country<-df%>%
 
 
 
-#### Daily pupil level data
+### Daily pupil level data
 
 ```{r }
 # Clean and daily aggregates individual
@@ -210,7 +218,7 @@ df_individual<-df%>%
 ```
 
 
-#### Weeks lost
+### Weeks lost
 
 
 ```{r }
@@ -238,9 +246,8 @@ df_weeks<-df%>%mutate(fullylost=ifelse(Status=="Closed due to COVID-19",1,0),
 
 # Figures
 
-## Aggregate figures 
 
-### Figure 1: Total countries with school closures
+## Figure 1: Total countries with school closures
 
 First, let's create label data to highlight a few dates. 
 
@@ -292,7 +299,7 @@ ggsave("fig1.png",    width = 10, height = 7, dpi = 650)
 
 
 
-### Figure 2: Countries by type of school closures
+## Figure 2: Countries by type of school closures
 
 Again, first, let's create label data to highlight a few dates. 
 
@@ -361,7 +368,7 @@ ggsave("fig2.png",    width = 10, height = 7, dpi = 650)
 ```
 
 
-### Figure 3: Learners affected
+## Figure 3: Learners affected
 
 Labels
 
@@ -428,7 +435,7 @@ ggplot(df_individual%>%filter(Type%in%c("Fully closed", "Affected"))%>%
 ```
 
 
-### Figure 4: Total weeks lost
+## Figure 4: Total weeks lost
 
 Data
 
@@ -501,7 +508,7 @@ ggplot(df_agg%>%filter(Type%in%c("Affected"))%>%
 
 
 
-### Figure 5: Total weeks lost by type
+## Figure 5: Total weeks lost by type
 
 
 
@@ -559,7 +566,7 @@ ggplot(df_agg%>%filter(Type%in%c("Affected","Fully closed"))%>%
 
 ```
 
-### Figure 6: Total weeks with UK
+## Figure 6: Total weeks with UK
 
 Data
 
@@ -660,7 +667,7 @@ ggplot(df_stacked%>%filter(Type%in%c("Affected","Fully closed"))%>%
 ```
 
 
-### Figure 7: UK And the rest + Affected
+## Figure 7: UK And the rest + Affected
 
 Labels
 
@@ -740,7 +747,7 @@ ggplot()+geom_line(df_weeks%>%filter(Type%in%c("Affected")),
 
 
 
-### Figure 8: UK And the rest + Fully
+## Figure 8: UK And the rest + Fully
 
 Data
 
@@ -820,7 +827,7 @@ ggplot()+geom_line(df_weeks%>%filter(Type%in%c("Fully closed")),
 
 
 
-### Figure 9: A map of affected
+## Figure 9: A map of affected
 
 
 Data, we only look at the last datapoint now!
@@ -913,7 +920,7 @@ ggplot(mapdata, aes(x = long, y = lat,group = group)) +
 ```
 
 
-### Figure 9: A map of full closures
+## Figure 9: A map of full closures
 
 
 Data, we only look at the last datapoint now!
@@ -975,7 +982,7 @@ ggplot(mapdata, aes(x = long, y = lat,group = group)) +
 
 
 
-### Figure 11: Comparing regions
+## Figure 11: Comparing regions
 
 
            
@@ -1032,7 +1039,7 @@ facet_wrap(~Type,scales = "free_x")+
 
 
 
-### Figure 12: Comparing regions with means
+## Figure 12: Comparing regions with means
 
 
      
@@ -1119,7 +1126,7 @@ facet_wrap(~Type,scales = "free_x")+
 
 
 
-### Figure 13: Comparing income groups  with means
+## Figure 13: Comparing income groups  with means
 
 
      
@@ -1198,7 +1205,7 @@ facet_wrap(~Type,scales = "free_x")+
 
 ```
 
-### Figure 13: A European ranking
+## Figure 13: A European ranking
 
 data
 
@@ -1237,7 +1244,7 @@ ggplot(ch,
 
 
 
-### Figure 15: A European ranking full
+## Figure 15: A European ranking full
 
 
 bar chart full 
@@ -1261,7 +1268,8 @@ ggplot(ch,
    ggsave("fig15.png",    width = 10, height = 7, dpi = 650)
 
 ```
-### Figure 16: Relative map
+
+## Figure 16: Relative map
 
 
 
@@ -1324,7 +1332,7 @@ ggplot(mapdata, aes(x = long, y = lat,group = group)) +
 
 
 
-### Figure 17: Comparing regions with means
+## Figure 17: Comparing regions with means
 
 
      
@@ -1416,7 +1424,7 @@ facet_wrap(~Type,scales = "free_x")+
 
 
 
-### Figure 18: Comparing income groups  with means
+## Figure 18: Comparing income groups  with means
 
 
      
