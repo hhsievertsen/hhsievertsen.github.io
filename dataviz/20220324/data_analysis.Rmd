@@ -1,0 +1,1508 @@
+---
+title: "Data analysis for the Data"
+output:
+    html_document:
+      toc: true
+      theme: united
+      code_folding: hide
+      toc_float: true
+      number_sections: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+rm(list=ls())
+```
+## Preparations
+
+First we load necessary libraries and fonts
+
+```{r}
+library("tidyverse")         # Tools for working with data and creating charts
+library("ggrepel")           # Annotating charts
+library("extrafont")         # For fonts
+library("zoo")               # Working with dates
+# font_import()              # Import Windows fonts, I want to use Times New Roman Like Font
+# loadfonts(device = "win")  
+# names(wf[wf=="TT Times New Roman"])
+
+```
+
+In the following I define my own theme for the charts. 
+
+```{r }
+theme_hhs <- function(){ 
+  theme_bw()
+  theme(
+        panel.border = element_blank(),legend.position=c(0.9,0.9),
+        panel.grid = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_blank(),
+        legend.key = element_blank(),
+        
+        axis.text.x=element_text( color="#545454",angle = 0, hjust = 0, size = 10,
+                                 vjust=0, margin=margin(-15,0,0,0)),
+        axis.text.y=element_text( color="#545454",angle = 0, hjust = 0, size = 10,
+                                 vjust=0, margin=margin(0,-15,0,0)),
+        axis.title=element_text( color="#545454"),
+        legend.text = element_text( color="#545454"),
+        plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=30),
+        plot.caption=element_text(color="#545454",angle = 0)
+        )
+}
+
+theme_hhs_lines <- function(){ 
+  theme_bw()
+  theme(plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=30),
+        plot.caption=element_text(color="#545454",angle = 0),
+        panel.grid=element_line(color="#dedede"),
+        panel.border = element_blank(),legend.position=c(0.9,0.9),
+        axis.ticks = element_blank(),
+        panel.background = element_blank(),
+        legend.key = element_blank(),
+        axis.text.x=element_text( color="#545454",angle = 0, hjust = 0, size = 10,
+                                 vjust=0, margin=margin(0,0,0,0)),
+        axis.text.y=element_text( color="#545454",angle = 0, hjust = 0, size = 10,
+                                 vjust=0, margin=margin(0,0,0,0)),
+        axis.title=element_text( color="#545454"),
+        legend.text = element_text( color="#545454")
+        )
+}
+```
+
+
+## Data cleaning
+
+### Load raw data
+
+#### School closure data 
+
+Load data on closures from the UNESCO
+The source is: https://en.unesco.org/covid19/educationresponse#schoolclosures 
+
+```{r}
+daily_closures<-read_csv("rawdata/total school closures/Full dataset - Master file 30092021.csv")%>%
+                rename(LOCATION=ISO)%>%
+                select(LOCATION,Status,Date)
+```
+
+#### Enrollment data
+
+Load data on enrollment from UNESCO. The source is: http://data.uis.unesco.org/#. I've downloaded data from 2010-2021 and I am going to use the most recent data until 2020. This is a source of measurement error, but I believe the best we can do. 
+
+
+```{r}
+enrollment<-read_csv("rawdata/enrollment/NATMON_DS_17032022055529801.csv")%>%
+            filter(!is.na(Value))%>%
+            group_by(LOCATION,TIME)%>%
+            summarise(Enrollment=sum(Value))%>%
+            arrange(LOCATION,TIME)%>%
+            filter(TIME<2021)%>%
+            filter(row_number()==n())%>%
+            select(LOCATION,Enrollment)
+```
+#### Country groups
+
+The data comes from the International Labour organisation and enables us to map countries into regions by area (for example by continent) or income group (for example by high vs. low income groups). The data source is https://ilostat.ilo.org/resources/concepts-and-definitions/classification-country-groupings/. 
+
+```{r}
+regions<-read_csv("rawdata/countrycodes/countries_en.csv")%>%
+         select(`ISO3 Code`, `ILO Subregion - Broad`, Country, starts_with("World"))%>%
+         rename(LOCATION=`ISO3 Code`,Region=`ILO Subregion - Broad`,Group=starts_with("World"))
+```
+
+#### Average schooling
+The data comes from the UNDP. The data source is http://hdr.undp.org/en/indicators/103006#. 
+Definition: "Average number of years of education received by people ages 25 and older, converted from education attainment levels using official durations of each level." (from the metadata). 
+
+Just like for enrollment, we use the most recent data (up to 2019).
+
+```{r}
+na.locf2 <- function(x) na.locf(x, na.rm = FALSE)
+schooling<-read_csv("rawdata/yearsofschooling/Mean years of schooling (years).csv",skip=6)%>%
+   pivot_longer(cols=3:62,names_to="Year",values_to="Schooling_raw")%>%
+            mutate(Year=as.numeric(substr(Year,1,4)),Schooling_raw=as.numeric(Schooling_raw))%>%
+            rename(HDI=`HDI Rank`)%>%
+            select(Country,Year,HDI,Schooling_raw)%>%
+            group_by(Country)%>%
+            mutate(Schooling=Schooling_raw)%>%
+            mutate(Schooling=na.locf2(Schooling))%>%
+            filter(Year==2019,!is.na(Schooling))%>%
+            select(Country,Schooling)
+
+# Missing for
+#   Anguilla, Aruba, Bermuda, British Virgin  Islands, Cape  Verde, Cayman  Islands, Cook, Islands Cura?ao, Faeroe  Islands, Gibraltar  Greenland  Korea,  Democratic  People's  Republic  of Monaco, Montserrat, Nauru   Sint  Maarten  (Kingdom  of  the  Netherlands) Somalia Tokelau, Turks  and  Caicos  Islands  Tuvalu  
+
+```
+
+
+### Combine data
+
+We now merge the data in one dataset
+
+```{r }
+
+# Merge enrollment and closures by LOCATION (ISO3)
+df<-merge(daily_closures,enrollment,by="LOCATION")
+# Merge regions on by LOCATION (ISO3)
+df<-merge(df,regions,by="LOCATION")
+# Add schooling, merge by Country name! 
+df<-merge(df,schooling,by="Country",all.x=T)
+
+```
+
+### Create datasets for analysis
+
+#### Daily aggregate country level data
+
+Here we get how many countries that are affected at any given day. 
+
+```{r }
+df_country<-df%>%
+            mutate(FullyAffected=ifelse(Status=="Closed due to COVID-19", 1,0),
+                   Affected      =ifelse(Status=="Closed due to COVID-19"|
+                                         Status=="Partially open", 1,0),
+                   PartiallyAffected=ifelse(Status=="Partially open", 1,0),all=1)%>%
+    group_by(Date)%>%
+    summarise(x_full    =sum(FullyAffected),
+              x_partial =sum(PartiallyAffected),
+              x_total   =sum(all),
+              x_affected=sum(Affected))%>%
+    mutate(date=as.Date(Date,format="%d/%m/%Y"))%>%
+           pivot_longer(cols=starts_with("x_"),names_to = "Type",
+           values_to = "value",names_prefix = "x_")%>%
+    mutate(Type=factor(case_when(
+                Type=="full"~"Fully closed",
+                Type=="partial"~"Partially closed",
+                Type=="affected"~"Affected",
+                Type=="total"~"Number of countries"),
+           levels=c("Number of countries","Affected","Partially closed","Fully closed")))
+
+```
+
+
+
+#### Daily pupil level data
+
+```{r }
+# Clean and daily aggregates individual
+df_individual<-df%>%
+            mutate(FullyAffected=ifelse(Status=="Closed due to COVID-19", Enrollment,0),
+                   Affected      =ifelse(Status=="Closed due to COVID-19"|
+                                         Status=="Partially open", Enrollment,0),
+                   PartiallyAffected=ifelse(Status=="Partially open", Enrollment,0))%>%
+    group_by(Date)%>%
+    summarise(x_full    =sum(FullyAffected),
+              x_partial =sum(PartiallyAffected),
+              x_total   =sum(Enrollment),
+              x_affected=sum(Affected))%>%
+    mutate(date=as.Date(Date,format="%d/%m/%Y"))%>%
+           pivot_longer(cols=starts_with("x_"),names_to = "Type",
+           values_to = "value",names_prefix = "x_")%>%
+    mutate(Type=factor(case_when(
+                Type=="full"~"Fully closed",
+                Type=="partial"~"Partially closed",
+                Type=="affected"~"Affected",
+                Type=="total"~"Number of countries"),
+           levels=c("Number of countries","Affected","Partially closed","Fully closed")))
+
+```
+
+
+#### Weeks lost
+
+
+```{r }
+
+df_weeks<-df%>%mutate(fullylost=ifelse(Status=="Closed due to COVID-19",1,0),
+                     partialloss=ifelse(Status=="Partially open",1,0),
+                     any=ifelse(Status=="Partially open"|Status=="Closed due to COVID-19",1,0),
+                     date=as.Date(Date,format="%d/%m/%Y"))%>%
+               group_by(LOCATION)%>%
+               arrange(date)%>%
+               mutate(`x_Fully closed`=cumsum(fullylost),
+                      `x_Partially closed`=cumsum(partialloss),
+                      `x_Affected`=cumsum(any))%>%
+              pivot_longer(cols=starts_with("x_"),names_to="Type",values_to="value",names_prefix ="x_")%>%
+              select(-c(fullylost,partialloss,any,Status))%>%
+              mutate(value=value/7)
+
+  
+  
+
+```
+
+
+
+
+# Figures
+
+## Aggregate figures 
+
+### Figure 1: Total countries with school closures
+
+First, let's create label data to highlight a few dates. 
+
+```{r }
+# Label data beginning
+labeldata_start<-df_country%>%
+                 filter(Type=="Affected",Date=="31/03/2020")%>%
+                 mutate(label=paste("March 31, 2020: ",value, "\n countries affected",sep=""))
+# Label data end
+labeldata_end<-df_country%>%
+                 filter(Type=="Affected",Date=="31/10/2021")%>%
+                 mutate(label=paste("October 31, 2021: ",value, "\n countries affected",sep=""))
+
+```
+
+
+Now create actual chart of total number of countries affected. 
+
+```{r }
+ggplot(df_country%>%filter(Type=="Affected"),
+       aes(x=date,y=value,fill=Type))+
+       geom_area(size=1.5,position=position_dodge()) +
+       theme_hhs()+
+       labs(y="Number of countries", x=" ", fill=" ", title="Countries affected by COVID-19 school disruptions",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+       scale_fill_manual(values=c( "#E69F00","#999999", "#56B4E9"))+
+       scale_x_date(date_breaks = "4 month", date_labels =  "%b %Y")+
+       geom_label_repel(data=labeldata_start,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = 150,nudge_y = 65,
+                       arrow = arrow(length = unit(0.25, 'cm')),
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,color="#545454")+
+       geom_label_repel(data=labeldata_end,mapping=aes(x=date,y=value,label=label),
+                         ,nudge_x = -100,nudge_y = 70,
+                        arrow = arrow(length = unit(0.25, 'cm')),label.size = NA,
+                        segment.color="#545454",segment.size=0.75,segment.ncp=5,
+                        segment.curvature=-0.25,show.legend = FALSE,
+                        color="#545454")+ylim(0,200)+
+       theme(legend.position = "none")
+ 
+  
+  
+  
+  # scale_colour_gradient(low = "#fc9f9f", high = "#750000")
+
+ggsave("fig1.png",    width = 10, height = 7, dpi = 650)
+```
+
+
+
+
+### Figure 2: Countries by type of school closures
+
+Again, first, let's create label data to highlight a few dates. 
+
+```{r }
+# Label data beginning
+labeldata_start<-df_country%>%
+                 filter(Type=="Fully closed",Date=="31/03/2020")%>%
+                 mutate(label=paste("March 31, 2020:\n Schools fully closed in ", value, " countries.  ",sep=""))
+# Label data beginning partial
+labeldata_start_partial<-df_country%>%
+                 filter(Type=="Partially closed",Date=="31/03/2020")%>%
+                 mutate(label=paste(" Schools partially closed in ", value, " countries.",sep=""))
+
+# Label data end
+labeldata_end<-df_country%>%
+                 filter(Type=="Fully closed",Date=="31/10/2021")%>%
+                 mutate(label=paste("October 31, 2021: \n  Schools fully closed in ", value, " countries.    ",sep=""))
+
+# Label data end partial
+labeldata_end_partial<-df_country%>%
+                 filter(Type=="Partially closed",Date=="31/10/2021")%>%
+                 mutate(label=paste(" Schools partially closed in ", value, " countries.",sep=""))
+
+```
+
+
+Now create actual chart of total number of countries affected. 
+
+```{r }
+ggplot(df_country%>%filter(Type%in%c("Fully closed", "Affected")),
+       aes(x=date,y=value,fill=Type))+
+       geom_area(size=1.5,position=position_dodge()) +
+       theme_hhs()+
+       labs(y="Number of Countries", x=" ", fill=" ", title="Countries affected by COVID-19 school disruptions",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+       scale_fill_manual(values=c(  "#E69F00","#963526", "#E69F00"))+
+       scale_x_date(date_breaks = "4 month", date_labels =  "%b %Y")+
+       geom_label_repel(data=labeldata_start,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = 175,nudge_y = 70,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE)+
+       geom_label_repel(data=labeldata_end,mapping=aes(x=date,y=value,label=label),
+                         ,nudge_x = -150,nudge_y = 135,color="white",
+                        segment.color = 'transparent',label.size = NA,show.legend = FALSE)+
+       ylim(0,200)+
+       geom_label_repel(data=labeldata_end_partial,mapping=aes(x=date,y=value,label=label),
+                         ,nudge_x = -150,nudge_y = 87,color="white",
+                        arrow = arrow(length = unit(0.25, 'cm')),label.size = NA,
+                        segment.color="#545454",segment.size=0.75,segment.ncp=5,
+                        segment.curvature=-0.25,show.legend = FALSE)+
+       geom_label_repel(data=labeldata_start_partial,mapping=aes(x=date,y=value,label=label),
+                         ,nudge_x = 175,nudge_y = 181,color="white",
+                        arrow = arrow(length = unit(0.25, 'cm')),label.size =NA,
+                        segment.size=0.75,segment.ncp=5,
+                        segment.curvature=-0.25,show.legend = FALSE,
+                        segment.color = 'transparent')+
+       theme(legend.position = "none")
+ 
+  
+  
+  
+  # scale_colour_gradient(low = "#fc9f9f", high = "#750000")
+
+ggsave("fig2.png",    width = 10, height = 7, dpi = 650)
+```
+
+
+### Figure 3: Learners affected
+
+Labels
+
+```{r }
+# Label data beginning
+labeldata_start<-df_individual%>%
+                 filter(Type=="Fully closed",Date=="31/03/2020")%>%
+                 mutate(label=paste("March 31, 2020:\n", format(round(value/1000000,0), nsmall=0,big.mark=","), "M children affected by full closures.",sep=""))
+# Label data beginning partial
+labeldata_start_partial<-df_individual%>%
+                 filter(Type=="Partially closed",Date=="31/03/2020")%>%
+                 mutate(label=paste(format(round(value/1000000,0), nsmall=0,big.mark=","), "M children affected by partial closures.",sep=""))
+
+# Label data end
+labeldata_end<-df_individual%>%
+                 filter(Type=="Fully closed",Date=="31/10/2021")%>%
+                 mutate(label=paste("      October 31, 2021:\n    ", format(round(value/1000000,0), nsmall=0,big.mark=","), "M children affected by full closures.   " ,sep=""))
+
+# Label data end partial
+labeldata_end_partial<-df_individual%>%
+                 filter(Type=="Partially closed",Date=="31/10/2021")%>%
+                 mutate(label=paste(format(round(value/1000000,0), nsmall=0,big.mark=","), "M children affected by partial closures.",sep=""))
+
+```
+
+Chart
+
+
+```{r }
+ggplot(df_individual%>%filter(Type%in%c("Fully closed", "Affected"))%>%
+         mutate(value=value/1000000),aes(x=date,y=value,fill=Type))+
+         geom_area(size=1.5,position=position_dodge())+
+       theme_hhs()+
+       labs(y="Number of Children (millions)", x=" ", fill=" ", title="Children affected by COVID-19 school disruptions",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+       scale_fill_manual(values=c(  "#E69F00","#963526", "#E69F00"))+
+       scale_x_date(date_breaks = "4 month", date_labels =  "%b %Y")+
+       geom_label_repel(data=labeldata_start,mapping=aes(x=date,y=value/1000000,label=label),
+                        ,nudge_x = 125,nudge_y = 360,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE)+
+       geom_label_repel(data=labeldata_end,mapping=aes(x=date,y=value/1000000,label=label),
+                         ,nudge_x = -150,nudge_y = 1330,color="white",
+                        segment.color = 'transparent',label.size = NA,show.legend = FALSE)+
+       ylim(0,1800)+
+       geom_label_repel(data=labeldata_end_partial,mapping=aes(x=date,y=value/1000000,label=label),
+                         ,nudge_x = -150,nudge_y = 535,color="white",
+                        arrow = arrow(length = unit(0.25, 'cm')),label.size = NA,
+                        segment.color="#545454",segment.size=0.75,segment.ncp=5,
+                        segment.curvature=-0.25,show.legend = FALSE)+
+       geom_label_repel(data=labeldata_start_partial,mapping=aes(x=date,y=value/1000000,label=label),
+                         ,nudge_x = 125,nudge_y = 1465,color="white",
+                        arrow = arrow(length = unit(0.25, 'cm')),label.size =NA,
+                        segment.size=0.75,segment.ncp=5,
+                        segment.curvature=-0.25,show.legend = FALSE,
+                        segment.color = 'transparent')+
+       theme(legend.position = "none")
+
+  
+  ggsave("fig3.png",    width = 10, height = 7, dpi = 650)
+  
+
+```
+
+
+### Figure 4: Total weeks lost
+
+Data
+
+```{r }
+df_agg<-df_weeks%>%
+   group_by(Date,Type)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=el/enrollment,
+          date=as.Date(Date,format="%d/%m/%Y"))
+
+
+  
+  
+
+```
+
+Labels
+
+```{r }
+
+# Label data mid
+labeldata_mid<-df_agg%>%
+                 filter(Type=="Affected",Date=="31/12/2020")%>%
+                 mutate(label=paste(" December 31, 2020:\n ", format(round(value,0), nsmall=0,big.mark=","), " weeks of partial \n or full school closures.  " ,sep=""))
+
+
+
+# Label data end
+labeldata_end<-df_agg%>%
+                 filter(Type=="Affected",Date=="31/10/2021")%>%
+                 mutate(label=paste("October 31, 2021:\n ", format(round(value,0), nsmall=0,big.mark=","), " weeks of partial \n or full school closures.  " ,sep=""))
+
+
+
+```
+
+
+Chart
+
+
+```{r }
+ggplot(df_agg%>%filter(Type%in%c("Affected"))%>%
+         mutate(value=value),aes(x=date,y=value,fill=Type))+
+         geom_line(size=1,color="#E69F00")+
+         theme_hhs_lines()+scale_x_date(date_breaks = "4 month", date_labels =  "%b %Y")+
+         labs(y="Cumulative Number of Weeks", x=" ", title="Weeks of COVID-19 school disruptions",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+  geom_label_repel(data=labeldata_end,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -125,nudge_y = -20,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#E69F00")+
+  geom_label_repel(data=labeldata_mid,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -125,nudge_y = +5,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#E69F00")
+
+  
+  
+    ggsave("fig4.png",    width = 10, height = 7, dpi = 650)
+  
+
+```
+
+
+
+
+### Figure 5: Total weeks lost by type
+
+
+
+Labels
+
+```{r }
+
+# Label data end full
+labeldata_mid<-df_agg%>%
+                 filter(Type=="Fully closed",Date=="31/10/2021")%>%
+                 mutate(label=paste("October 31, 2021:\n ", format(round(value,0), nsmall=0,big.mark=","), " weeks of full school closures.  " ,sep=""))
+
+
+
+# Label data end partial
+labeldata_end<-df_agg%>%
+                 filter(Type=="Affected",Date=="31/10/2021")%>%
+                 mutate(label=paste("October 31, 2021:\n ", format(round(value,0), nsmall=0,big.mark=","), " weeks of partial \n or full school closures.  " ,sep=""))
+
+
+
+```
+
+
+Chart
+
+
+```{r }
+ggplot(df_agg%>%filter(Type%in%c("Affected","Fully closed"))%>%
+         mutate(value=value),aes(x=date,y=value,color=Type))+
+         geom_line(size=1)+
+         theme_hhs_lines()+scale_x_date(date_breaks = "4 month", date_labels =  "%b %Y")+
+         labs(y="Cumulative Number of Weeks", x=" ", title="Weeks of COVID-19 school disruptions",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+       scale_color_manual(values=c(  "#E69F00","#963526", "#E69F00"))+
+       theme(legend.position = "none")+
+  geom_label_repel(data=labeldata_end,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -125,nudge_y = -20,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#E69F00")+
+  geom_label_repel(data=labeldata_mid,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -145,nudge_y = -10,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#963526")
+
+    ggsave("fig5.png",    width = 10, height = 7, dpi = 650)
+
+  
+  
+  
+
+```
+
+### Figure 6: Total weeks with UK
+
+Data
+
+```{r }
+df_UK<-df_weeks%>%
+   filter(LOCATION=="GBR")%>%
+   group_by(Date,Type)%>%
+   summarise(value=sum(value))%>%
+   mutate(date=as.Date(Date,format="%d/%m/%Y"))
+
+df_Ind<-df_weeks%>%
+   filter(Country=="India")%>%
+   group_by(Date,Type)%>%
+   summarise(value=sum(value))%>%
+   mutate(date=as.Date(Date,format="%d/%m/%Y"))
+
+df_stacked<-rbind(df_UK%>%mutate(country="UK"),df_agg%>%mutate(country="Globally"))
+  
+
+  
+  
+
+```
+
+Labels
+
+```{r }
+
+# Label data mid
+labeldata_mid<-df_stacked%>%
+                 filter(Type=="Fully closed",country=="Globally",Date=="31/10/2021")%>%
+                 mutate(label=paste(" October 31, 2021\n Globally: ", format(round(value,0), nsmall=0,big.mark=","), " weeks of full school closures.  " ,sep=""))
+
+
+
+# Label data end
+labeldata_end<-df_stacked%>%
+                 filter(Type=="Affected",country=="Globally",Date=="31/10/2021")%>%
+                 mutate(label=paste("October 31, 2021\n Globally: ", format(round(value,0), nsmall=0,big.mark=","), " weeks of partial \n or full school closures.  " ,sep=""))
+
+# Label data mid UK
+labeldata_midUK<-df_stacked%>%
+                 filter(Type=="Fully closed",country=="UK",Date=="31/10/2021")%>%
+                 mutate(label=paste("UK: ", format(round(value,0), nsmall=0,big.mark=","), " weeks of \n or full school closures.  " ,sep=""))
+
+
+
+# Label data end UK
+labeldata_endUK<-df_stacked%>%
+                 filter(Type=="Affected",country=="UK",Date=="31/10/2021")%>%
+                 mutate(label=paste("UK: ", format(round(value,0), nsmall=0,big.mark=","), " weeks of partial \n or full school closures.  " ,sep=""))
+
+```
+
+
+Chart
+
+
+```{r }
+ggplot(df_stacked%>%filter(Type%in%c("Affected","Fully closed"))%>%
+         mutate(value=value),aes(x=date,y=value,color=Type,linetype=country))+
+         geom_line(size=1)+
+         theme_hhs_lines()+scale_x_date(date_breaks = "4 month", date_labels =  "%b %Y")+
+         labs(y="Cumulative Number of Weeks", x=" ", title="Weeks of COVID-19 school disruptions",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+       scale_color_manual(values=c(  "#E69F00","#963526", "#E69F00"),guide=FALSE)+
+  theme(legend.position = c(0.1,0.9))+
+         labs(y="Cumulative Number of Weeks", x=" ", linetype=" ")+
+  geom_label_repel(data=labeldata_end,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -355,nudge_y = -10,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#E69F00")+
+  geom_label_repel(data=labeldata_mid,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -145,nudge_y = -12,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#963526")+
+  geom_label_repel(data=labeldata_endUK,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -95,nudge_y = +7,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=-0.2,show.legend = FALSE,
+                       fill="#E69F00")+
+  geom_label_repel(data=labeldata_midUK,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -125,nudge_y = -25,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#963526")
+  
+   ggsave("fig6.png",    width = 10, height = 7, dpi = 650)
+
+  
+
+```
+
+
+### Figure 7: UK And the rest + Affected
+
+Labels
+
+```{r }
+
+
+# Label data end Uganda
+labeldata_end<-df_weeks%>%
+                 filter(Type=="Affected",Country=="Uganda",Date=="31/10/2021")%>%
+                 mutate(label=paste("Uganda: ", format(round(value,0), nsmall=0,big.mark=","), " weeks of partial \n or full school closures.  " ,sep=""))
+
+
+# Label data end UK
+labeldata_endUK<-df_weeks%>%
+                 filter(Type=="Affected",Country=="United Kingdom",Date=="31/10/2021")%>%
+                 mutate(label=paste("UK: ", format(round(value,0), nsmall=0,big.mark=","), " weeks of partial \n or full school closures.  " ,sep=""))
+
+```
+
+
+Data
+
+```{r }
+df_UK<-df_weeks%>%
+   filter(LOCATION=="GBR")%>%
+   group_by(Date,Type)%>%
+   summarise(value=sum(value))%>%
+   mutate(date=as.Date(Date,format="%d/%m/%Y"))
+
+df_Ind<-df_weeks%>%
+   filter(Country=="Uganda")%>%
+   group_by(Date,Type)%>%
+   summarise(value=sum(value))%>%
+   mutate(date=as.Date(Date,format="%d/%m/%Y"))
+
+df_stacked<-rbind(df_UK%>%mutate(country="UK"),df_Ind%>%mutate(country="Uganda"))
+  
+
+  
+  
+
+```
+
+```{r }
+ggplot()+geom_line(df_weeks%>%filter(Type%in%c("Affected")),
+                   mapping=aes(x=date,y=value,group=LOCATION),size=.1,color="#7d7d7c",show.legend = FALSE)+
+         geom_line(df_stacked%>%filter(Type%in%c("Affected"))                  %>%
+         mutate(value=value),mapping=aes(x=date,y=value,color=Type,linetype=country),size=1.5)+
+         theme_hhs_lines()+scale_x_date(date_breaks = "4 month", date_labels =  "%b %Y")+
+         labs(y="Cumulative Number of Weeks", x=" ", title="Weeks of COVID-19 school disruptions",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+       scale_color_manual(values=c(  "#E69F00","#963526", "#E69F00"),guide=FALSE)+
+  theme(legend.position = c(0.1,0.9))+
+         labs(y="Cumulative Number of Weeks", x=" ", linetype=" ")+
+         labs(y="Cumulative Number of Weeks", x=" ", linetype=" ")+
+  geom_label_repel(data=labeldata_end,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -355,nudge_y = +20,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=-0.2,show.legend = FALSE,
+                       fill="#E69F00")+
+  geom_label_repel(data=labeldata_endUK,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -115,nudge_y=-7,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#E69F00")
+  
+    
+   ggsave("fig7.png",    width = 10, height = 7, dpi = 650)
+
+  
+
+```
+
+
+
+
+
+### Figure 8: UK And the rest + Fully
+
+Data
+
+```{r }
+df_UK<-df_weeks%>%
+   filter(LOCATION=="GBR")%>%
+   group_by(Date,Type)%>%
+   summarise(value=sum(value))%>%
+   mutate(date=as.Date(Date,format="%d/%m/%Y"))
+
+df_Ind<-df_weeks%>%
+   filter(Country=="Bangladesh")%>%
+   group_by(Date,Type)%>%
+   summarise(value=sum(value))%>%
+   mutate(date=as.Date(Date,format="%d/%m/%Y"))
+
+df_stacked<-rbind(df_UK%>%mutate(country="UK"),df_Ind%>%mutate(country="Bangladesh"))
+  
+
+  
+  
+
+```
+
+Labels
+
+```{r }
+
+
+# Label data end Bangladesh
+labeldata_end<-df_weeks%>%
+                 filter(Type=="Fully closed",Country=="Bangladesh",Date=="31/10/2021")%>%
+                 mutate(label=paste("Bangladesh: ", format(round(value,0), nsmall=0,big.mark=","), " weeks of full school closures.  " ,sep=""))
+
+
+# Label data end UK
+labeldata_endUK<-df_weeks%>%
+                 filter(Type=="Fully closed",Country=="United Kingdom",Date=="31/10/2021")%>%
+                 mutate(label=paste("UK: ", format(round(value,0), nsmall=0,big.mark=","), " weeks of full school closures.  " ,sep=""))
+
+
+```
+
+
+
+```{r }
+ggplot()+geom_line(df_weeks%>%filter(Type%in%c("Fully closed")),
+                   mapping=aes(x=date,y=value,group=LOCATION),size=.1,color="#7d7d7c",show.legend = FALSE)+
+         geom_line(df_stacked%>%filter(Type%in%c("Fully closed"))                  %>%
+         mutate(value=value),mapping=aes(x=date,y=value,color=Type,linetype=country),size=1.5)+
+         theme_hhs_lines()+scale_x_date(date_breaks = "4 month", date_labels =  "%b %Y")+
+         labs(y="Cumulative Number of Weeks", x=" "  , title="Weeks of COVID-19 school disruptions",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+       scale_color_manual(values=c(  "#963526","#963526", "#E69F00"),guide=FALSE)+
+  theme(legend.position = c(0.1,0.9))+
+         labs(y="Cumulative Number of Weeks", x=" ", linetype=" ")+
+         labs(y="Cumulative Number of Weeks", x=" ", linetype=" ")+
+  geom_label_repel(data=labeldata_end,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -355,nudge_y =-30,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#963526")+
+  geom_label_repel(data=labeldata_endUK,mapping=aes(x=date,y=value,label=label),
+                        ,nudge_x = -115,nudge_y=-7,
+                       arrow = arrow(length = unit(0.25, 'cm')),color="white",
+                       label.size = NA,segment.color="#545454",segment.size=0.75,
+                       segment.ncp=5,segment.curvature=+0.2,show.legend = FALSE,
+                       fill="#963526")
+  
+      
+   ggsave("fig8.png",    width = 10, height = 7, dpi = 650)
+
+  
+
+```
+
+
+
+### Figure 9: A map of affected
+
+
+Data, we only look at the last datapoint now!
+
+```{r }
+df_end<-df_weeks%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   filter(Type=="Affected")
+```
+
+Clean map data
+
+```{r }
+
+# Extract Map data
+world_map <- map_data("world")%>%rename(Country=region)%>%
+  mutate(Country=case_when(
+ Country=="Antigua"~"Antigua and Barbuda",
+ Country=="Brunei"~"Brunei Darussalam",
+ Country=="Ivory Coast"~"C?te d'Ivoire",
+ Country=="Republic of Congo"~"Congo",
+ Country=="Democratic Republic of the Congo"~"Congo, Democratic Republic of the",
+ Country=="Czech Republic"~"Czechia",
+ Country=="Swaziland"~"Eswatini",
+ Country=="Iran"~"Iran, Islamic Republic of",
+ Country=="South Korea"~"Korea, Republic of",
+ Country=="Laos"~"Lao People's Democratic Republic",
+ Country=="Macedonia"~"Macedonia, the former Yugoslav Republic of",
+ Country=="Micronesia"~"Micronesia, Federated States of",
+ Country=="Moldova"~"Moldova, Republic of",
+ Country=="Russia"~"Russian Federation",
+ Country=="Saint Vincent"~"Saint Vincent and the Grenadines",
+ Country=="Tanzania"~"Tanzania, United Republic of",
+ Country=="Tobago"~"Trinidad and Tobago",
+ Country=="Trinidad"~"Trinidad and Tobago",
+ Country=="UK"~"United Kingdom",
+ Country=="USA"~"United States",
+ Country=="Vietnam"~"Viet Nam",
+Country=="Curacao"~"Cura?ao" ,
+Country=="North Macedonia"~"Macedonia, the former Yugoslav Republic of",
+Country=="North Korea"~"Korea, Democratic People's Republic of",
+Country=="Palestine"~"Occupied Palestinian Territory",
+Country=="Syria"~"Syrian Arab Republic",
+Country=="Saint Martin"~"Sint Maarten (Kingdom of the Netherlands)",
+Country=="Venezuela"~"Venezuela, Bolivarian Republic of",
+ TRUE~Country))
+
+
+  
+# merge
+mapdata<-merge(world_map, df_end,by = "Country",all.x=TRUE)
+# Cleaning (remove Antarcatica and sort the data)
+mapdata<-mapdata%>%
+        filter(!(Country %in% c("Antarctica")))%>%
+        arrange(Country,order)%>%
+        mutate(dur=ifelse(is.na(value),"No data",value))
+
+
+```
+
+
+And now a map
+
+```{r world_map, echo=FALSE,warning=FALSE,message=FALSE, fig.width=8,fig.height=6}
+
+# Create map
+ggplot(mapdata, aes(x = long, y = lat,group = group)) +
+  geom_polygon(aes(fill=value))+
+  theme_void()+  coord_quickmap()+
+  scale_fill_gradientn(breaks=seq(0,75,15),labels=seq(0,75,15),
+                       colours=c("#fabebe",  "#8f0000"))+
+  theme(legend.position = "bottom",
+      legend.title = element_text(,size=10,color="#545454"),
+            legend.text = element_text( color="#545454"),
+        plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=30),
+        plot.caption=element_text(color="#545454",angle = 0))+
+  labs(fill="School closures in weeks",
+       title="COVID-19 induced partial and full school closures",
+       caption="Notes: Own calculations based on data from UNESCO.")+
+  guides(fill = guide_colourbar(ticks = FALSE,
+         title.position = "left", label.hjust = .5,
+         title.hjust = 0.5,nbin=8, raster=F, barwidth=20,
+         label.position = "bottom"))
+   ggsave("fig9.png",    width = 10, height = 7, dpi = 650)
+
+  
+```
+
+
+### Figure 9: A map of full closures
+
+
+Data, we only look at the last datapoint now!
+
+```{r }
+df_end<-df_weeks%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   filter(Type=="Fully closed")
+```
+
+Clean map data
+
+```{r }
+
+
+
+# merge
+mapdata<-merge(world_map, df_end,by = "Country",all.x=TRUE)
+# Cleaning (remove Antarcatica and sort the data)
+mapdata<-mapdata%>%
+        filter(!(Country %in% c("Antarctica")))%>%
+        arrange(Country,order)%>%
+        mutate(dur=ifelse(is.na(value),"No data",value))
+
+
+```
+
+
+And now a map
+
+```{r }
+
+# Create map
+ggplot(mapdata, aes(x = long, y = lat,group = group)) +
+ geom_polygon(aes(fill=value))+
+  theme_void()+  coord_quickmap()+
+  scale_fill_gradientn(breaks=seq(0,75,15),labels=seq(0,75,15),
+                       colours=c("#fabebe",  "#8f0000"))+
+  theme(legend.position = "bottom",
+      legend.title = element_text(,size=10,color="#545454"),
+            legend.text = element_text( color="#545454"),
+        plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=30),
+        plot.caption=element_text(color="#545454",angle = 0))+
+  labs(fill="School closures in weeks",
+       title="COVID-19 induced full school closures",
+       caption="Notes: Own calculations based on data from UNESCO.")+
+  guides(fill = guide_colourbar(ticks = FALSE,
+         title.position = "left", label.hjust = .5,
+         title.hjust = 0.5,nbin=8, raster=F, barwidth=20,
+         label.position = "bottom"))
+
+   ggsave("fig10.png",    width = 10, height = 7, dpi = 650)
+
+
+```
+
+
+
+### Figure 11: Comparing regions
+
+
+           
+                
+```{r }
+# Create regions
+df_reg<-df_weeks%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   mutate(myregion=case_when(
+                Region=="Eastern Europe"~"Europe and North America",
+                Region=="Northern America"~"Europe and North America",
+                Region=="Northern, Southern and Western Europe"~"Europe and North America",
+                Region=="Sub-Saharan Africa"~"Africa & Arab Countries",
+                Region=="Northern Africa"~"Africa & Arab Countries",
+                Region=="Arab States"~"Africa & Arab Countries",
+                Region=="Southern Asia"~"Asia and the Pacific",
+                Region=="Eastern Asia"~"Asia and the Pacific",
+                Region=="South-Eastern Asia and the Pacific"~"Asia and the Pacific",
+                Region=="Central and Western Asia"~"Asia and the Pacific",
+                Region=="Latin America and the Caribbean"~"Latin America and the Caribbean"))%>%
+    mutate(Type=factor(Type,levels=c("Affected","Partially closed", "Fully closed")))
+
+```
+
+
+
+Chart by region
+
+
+```{r }
+ggplot(df_reg,aes(x=myregion,y=value,color=myregion))+
+  geom_jitter(width=0.3,height=0.02,shape=1)+
+facet_wrap(~Type,scales = "free_x")+
+  coord_flip()+
+   theme_hhs_lines()+
+  labs(y="Weeks",x="",
+       title="COVID-19 induced disruptions by region",
+       caption="Notes: Own calculations based on data from UNESCO.")+
+  theme(legend.position = "none",axis.text.y = element_text(hjust=0),
+        plot.caption = element_text(hjust=1),
+        strip.text = element_text(size=12, hjust=0.5),
+        strip.background = element_blank())
+
+
+
+   ggsave("fig11.png",    width = 10, height = 7, dpi = 650)
+
+```
+
+
+
+
+
+### Figure 12: Comparing regions with means
+
+
+     
+Data on means
+
+```{r }
+#Total averages
+agg_all<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   group_by(Type)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=round(el/enrollment,0))%>%select(value,Type)
+
+#UK averages
+agg_UK<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   group_by(Type)%>%
+   filter(Country=="United Kingdom")%>%select(value,Type)
+
+# Aggregates by region
+agg_reg<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   group_by(Type,myregion)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=round(el/enrollment,0))%>%select(value,Type,myregion)
+```
+
+
+Chart by region
+
+
+```{r }
+df_reg<-df_reg%>%mutate(myregion=factor(myregion,levels=c("Africa & Arab Countries",
+                                                          "Europe and North America",
+                                                           "Asia and the Pacific",
+                                                          "Latin America and the Caribbean")))
+  
+ggplot(df_reg,aes(x=myregion,y=value,color=myregion))+
+  geom_jitter(width=0.3,height=0.02,shape=1)+
+facet_wrap(~Type,scales = "free_x")+
+      geom_hline(data=agg_all,aes(yintercept = value))+
+    geom_hline(data=agg_UK,aes(yintercept = value),linetype = "longdash")+
+  geom_label(data=agg_reg,mapping=aes(x=myregion,y=value,
+                                    label=paste("",round(value,0),sep="")),vjust=-0.25,size=3.5)+
+  geom_label(data=agg_all,mapping=aes(x=5.05,y=value,color=c("  "),
+                                    label=paste("Global average:",round(value,0),"",sep="")),color="black",vjust=0,size=3.5,label.size = NA)+
+   geom_label(data=agg_UK,mapping=aes(x=4.75,y=value,color=c("  "),
+                                    label=paste("UK:",round(value,0),"",sep="")),color="black",vjust=0,size=3.5,label.size = NA)+
+  scale_x_discrete(labels=c("Europe and North America"="Europe and North America",
+                                        "Asia and the Pacific"="Asia and the Pacific",
+                                        "Latin America and the Caribbean"="Latin America and the Caribbean",
+                                        "Africa & Arab Countries"="Africa & Arab Countries"),
+                   expand = expansion(add = c(0.5,1.25)))+
+    coord_flip()+
+   theme_hhs_lines()+
+ labs(y="Weeks",x="",
+       title="COVID-19 induced disruptions by region",
+       caption="Notes: Own calculations based on data from UNESCO.")+
+  theme(legend.position = "none",axis.text.y = element_text(hjust=0),
+        plot.caption = element_text(hjust=1),
+        strip.text = element_text(size=14, hjust=0.5),
+        strip.background = element_blank())
+
+  ggsave("fig12.png",    width = 10, height = 7, dpi = 650)
+
+
+```
+
+
+
+
+
+
+### Figure 13: Comparing income groups  with means
+
+
+     
+Data on means
+
+```{r }
+#Total averages
+agg_all<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   group_by(Type)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=round(el/enrollment,0))%>%select(value,Type)
+
+#UK averages
+agg_UK<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   group_by(Type)%>%
+   filter(Country=="United Kingdom")%>%select(value,Type)
+
+# Aggregates by region
+agg_reg<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=round(value))%>%
+   group_by(Type,Group)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=round(el/enrollment,0))%>%select(value,Type,Group)
+```
+
+
+Chart by region
+
+
+```{r }
+df_reg<-df_reg%>%mutate(Group=factor(Group,levels=c("Low income",
+                                                          "Lower-middle income",
+                                                           "Upper-middle income",
+                                                          "High income")))
+  
+ggplot(df_reg,aes(x=Group,y=value,color=Group))+
+  geom_jitter(width=0.3,height=0.02,shape=1)+
+facet_wrap(~Type,scales = "free_x")+
+      geom_hline(data=agg_all,aes(yintercept = value))+
+    geom_hline(data=agg_UK,aes(yintercept = value),linetype = "longdash")+
+  geom_label(data=agg_reg,mapping=aes(x=Group,y=value,
+                                    label=paste("",round(value,0),sep="")),vjust=-0.25,size=3.5)+
+  geom_label(data=agg_all,mapping=aes(x=5.05,y=value,color=c("  "),
+                                    label=paste("Global average:",round(value,0),"",sep="")),color="black",vjust=0,size=3.5,label.size = NA)+
+   geom_label(data=agg_UK,mapping=aes(x=4.75,y=value,color=c("  "),
+                                    label=paste("UK:",round(value,0),"",sep="")),color="black",vjust=0,size=3.5,label.size = NA)+
+  scale_x_discrete(expand = expansion(add = c(0.5,1.5)))+
+    coord_flip()+
+   theme_hhs_lines()+
+  labs(y="School closures in weeks",x="",
+       title="COVID-19 induced disruptions by inc. group",
+       caption="Notes: Own calculations based on data from UNESCO.")+
+  theme(legend.position = "none",axis.text.y = element_text(hjust=0),
+        plot.caption = element_text(hjust=1),
+        strip.text = element_text(size=14, hjust=0.5,family = ),
+        strip.background = element_blank())
+
+
+  ggsave("fig13.png",    width = 10, height = 7, dpi = 650)
+
+
+```
+
+### Figure 13: A European ranking
+
+data
+
+```{r }
+df_eur<-df_reg%>%filter(myregion=="Europe and North America")%>%
+        mutate(Country=case_when(
+          Country=="Macedonia, the former Yugoslav Republic of"~"North Macedonia",
+          Country=="Moldova, Republic of"~"Moldova",
+           TRUE~Country
+          
+        ))
+```
+
+bar chart affected
+
+```{r }
+ch<-df_eur%>%filter(Type=="Affected")%>%
+         ungroup%>%arrange(-value)%>%mutate(Country=paste(row_number(),Country))
+ggplot(ch,
+       aes(x=reorder(Country,value),y=value))+
+     geom_bar(stat="identity")+
+  coord_flip()+
+  theme_hhs_lines()+
+  labs(x=" "  ,y="Weeks", title="Affected",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+  geom_text(aes(label=value),nudge_y=2,size=2.5)+ theme(aspect.ratio=4/3)+
+  geom_bar(data=ch%>%filter(LOCATION=="GBR"),
+           mapping=aes(x=reorder(Country,value),y=value),stat="identity",fill="red")+
+  theme(axis.text.y=element_text(size=7),plot.title=element_text(size=20))
+
+    
+   ggsave("fig13.png",    width = 10, height = 7, dpi = 650)
+
+   
+```
+
+
+
+### Figure 15: A European ranking full
+
+
+bar chart full 
+
+```{r }
+ch<-df_eur%>%filter(Type=="Fully closed")%>%
+         ungroup%>%arrange(-value)%>%mutate(Country=paste(row_number(),Country))
+ggplot(ch,
+       aes(x=reorder(Country,value),y=value))+
+     geom_bar(stat="identity")+
+  coord_flip()+
+  theme_hhs_lines()+
+    labs(x=" "  ,y="Weeks", title="Fully closed",
+            caption="Notes: Own calculations based on data from UNESCO.")+
+  geom_text(aes(label=value),nudge_y=2,size=2.5)+ theme(aspect.ratio=4/3)+
+  geom_bar(data=ch%>%filter(LOCATION=="GBR"),
+           mapping=aes(x=reorder(Country,value),y=value),stat="identity",fill="red")+
+  theme(axis.text.y=element_text(size=7),plot.title=element_text(size=20))
+
+    
+   ggsave("fig15.png",    width = 10, height = 7, dpi = 650)
+
+```
+### Figure 16: Relative map
+
+
+
+Data, we only look at the last datapoint now!
+
+```{r }
+df_end<-df_weeks%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=100*(value/40)/Schooling)%>%
+   filter(Type=="Affected")
+```
+
+Clean map data
+
+```{r }
+
+
+
+# merge
+mapdata<-merge(world_map, df_end,by = "Country",all.x=TRUE)
+# Cleaning (remove Antarcatica and sort the data)
+mapdata<-mapdata%>%
+        filter(!(Country %in% c("Antarctica")))%>%
+        arrange(Country,order)%>%
+        mutate(dur=ifelse(is.na(value),"No data",value))
+
+
+```
+
+
+And now a map
+
+```{r }
+
+# Create map
+ggplot(mapdata, aes(x = long, y = lat,group = group)) +
+ geom_polygon(aes(fill=value))+
+  theme_void()+  coord_quickmap()+
+  scale_fill_gradientn(breaks=seq(0,75,15),labels=seq(0,75,15),
+                       colours=c("#fabebe",  "#8f0000"))+
+  theme(legend.position = "bottom",
+      legend.title = element_text(,size=10,color="#545454"),
+            legend.text = element_text( color="#545454"),
+        plot.title=element_text(color="#545454",angle = 0, hjust = 0.5,size=30),
+        plot.caption=element_text(color="#545454",angle = 0))+
+  labs(fill="% of average schooling affected",
+       title="Relative COVID-19 schooling disruptions ",
+       caption="Notes: Own calculations based on data from UNESCO.")+
+  guides(fill = guide_colourbar(ticks = FALSE,
+         title.position = "left", label.hjust = .5,
+         title.hjust = 0.5,nbin=8, raster=F, barwidth=20,
+         label.position = "bottom"))
+   ggsave("fig16.png",    width = 10, height = 7, dpi = 650)
+
+```
+
+
+
+
+
+### Figure 17: Comparing regions with means
+
+
+     
+Data on means
+
+```{r }
+#Total averages
+agg_all<-df_reg%>%
+   group_by(Country,Type)%>%
+   mutate(value=100*(value/40)/Schooling)%>%
+  filter(!is.na(value))%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   group_by(Type)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=round(el/enrollment,0))%>%select(value,Type)
+
+#UK averages
+agg_UK<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+  mutate(rvalue=100*(value/40)/Schooling)%>%
+  filter(!is.na(value))%>%
+   filter(row_number()==n())%>%
+   group_by(Type)%>%
+   filter(Country=="United Kingdom")%>%select(value,Type)
+
+# Aggregates by region
+agg_reg<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+  mutate(value=100*(value/40)/Schooling)%>%
+  filter(!is.na(value))%>%
+   filter(row_number()==n())%>%
+   group_by(Type,myregion)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=round(el/enrollment,0))%>%select(value,Type,myregion)
+```
+
+
+Chart by region
+
+
+```{r }
+df_reg1<-df_reg%>%mutate(myregion=factor(myregion,levels=c("Africa & Arab Countries",
+                                                          "Europe and North America",
+                                                           "Asia and the Pacific",
+                                                          "Latin America and the Caribbean")))%>%
+mutate(value=100*(value/40)/Schooling)
+  
+ggplot(df_reg1,aes(x=myregion,y=value,color=myregion))+
+  geom_jitter(width=0.3,height=0.02,shape=1)+
+facet_wrap(~Type,scales = "free_x")+
+      geom_hline(data=agg_all,aes(yintercept = value))+
+    geom_hline(data=agg_UK,aes(yintercept = value),linetype = "longdash")+
+  geom_label(data=agg_reg,mapping=aes(x=myregion,y=value,
+                                    label=paste("",round(value,0),sep="")),vjust=-0.25,size=3.5)+
+  geom_label(data=agg_all,mapping=aes(x=5.25,y=value,color=c("  "),
+                                    label=paste("Global average:",round(value,0),"",sep="")),color="black",vjust=0,size=3.5,label.size = NA)+
+   geom_label(data=agg_UK,mapping=aes(x=4.95,y=value,color=c("  "),
+                                    label=paste("UK:",round(value,0),"",sep="")),color="black",vjust=0,size=3.5,label.size = NA)+
+  scale_x_discrete(labels=c("Europe and North America"="Europe and North America",
+                                        "Asia and the Pacific"="Asia and the Pacific",
+                                        "Latin America and the Caribbean"="Latin America and the Caribbean",
+                                        "Africa & Arab Countries"="Africa & Arab Countries"),
+                   expand = expansion(add = c(0.5,1.5)))+
+    coord_flip()+
+   theme_hhs_lines()+
+  labs(y="% of average schooling",x="",
+       title="Relative COVID-19 schooling disruptions",
+       caption="Notes: Own calculations based on data from UNESCO.")+
+  theme(legend.position = "none",axis.text.y = element_text(hjust=0),
+        plot.caption = element_text(hjust=1),
+        strip.text = element_text(size=14, hjust=0.5),
+        strip.background = element_blank())
+
+
+   ggsave("fig17.png",    width = 10, height = 7, dpi = 650)
+
+
+```
+
+
+
+
+
+
+### Figure 18: Comparing income groups  with means
+
+
+     
+Data on means
+
+```{r }
+#Total averages
+agg_all<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   filter(row_number()==n())%>%
+   mutate(value=100*(value/40)/Schooling)%>%
+  filter(!is.na(value))%>%
+   group_by(Type)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=round(el/enrollment,0))%>%select(value,Type)
+
+#UK averages
+agg_UK<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   mutate(value=100*(value/40)/Schooling)%>%
+  filter(!is.na(value))%>%
+   filter(row_number()==n())%>%
+   group_by(Type)%>%
+   filter(Country=="United Kingdom")%>%select(value,Type)
+
+# Aggregates by region
+agg_reg<-df_reg%>%
+   group_by(Country,Type)%>%
+   arrange(Country,Type,date)%>%
+   mutate(value=100*(value/40)/Schooling)%>%
+  filter(!is.na(value))%>%
+   filter(row_number()==n())%>%
+   group_by(Type,Group)%>%
+   mutate(el=Enrollment*value)%>%
+   summarise(enrollment=sum(Enrollment),
+             el=sum(el))%>%
+   mutate(value=round(el/enrollment,0))%>%select(value,Type,Group)
+```
+
+
+Chart by region
+
+
+```{r }
+df_reg1<-df_reg%>%mutate(Group=factor(Group,levels=c("Low income",
+                                                          "Lower-middle income",
+                                                           "Upper-middle income",
+                                                          "High income")))%>%
+mutate(value=100*(value/40)/Schooling)
+  
+  
+ggplot(df_reg1,aes(x=Group,y=value,color=Group))+
+  geom_jitter(width=0.3,height=0.02,shape=1)+
+facet_wrap(~Type,scales = "free_x")+
+      geom_hline(data=agg_all,aes(yintercept = value))+
+    geom_hline(data=agg_UK,aes(yintercept = value),linetype = "longdash")+
+  geom_label(data=agg_reg,mapping=aes(x=Group,y=value,
+                                    label=paste("",round(value,0),sep="")),vjust=-0.25,size=3.5)+
+  geom_label(data=agg_all,mapping=aes(x=5.25,y=value,color=c("  "),
+                                    label=paste("Global average:",round(value,0),"",sep="")),color="black",vjust=0,size=3.5,label.size = NA)+
+   geom_label(data=agg_UK,mapping=aes(x=4.95,y=value,color=c("  "),
+                                    label=paste("UK:",round(value,0),"",sep="")),color="black",vjust=0,size=3.5,label.size = NA)+
+  scale_x_discrete(labels=c("Europe and North America"="Europe and North America",
+                                        "Asia and the Pacific"="Asia and the Pacific",
+                                        "Latin America and the Caribbean"="Latin America and the Caribbean",
+                                        "Africa & Arab Countries"="Africa & Arab Countries"),
+                   expand = expansion(add = c(0.5,1.5)))+
+    coord_flip()+
+   theme_hhs_lines()+
+  labs(y="% of average schooling",x="",
+       title="Relative COVID-19 schooling disruptions",
+       caption="Notes: Own calculations based on data from UNESCO.")+
+  theme(legend.position = "none",axis.text.y = element_text(hjust=0),
+        plot.caption = element_text(hjust=1),
+        strip.text = element_text(size=14, hjust=0.5),
+        strip.background = element_blank())
+
+
+   ggsave("fig18.png",    width = 10, height = 7, dpi = 650)
+
+
+
+
+
+```
