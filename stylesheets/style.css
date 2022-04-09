@@ -12,6 +12,10 @@ h1{
    font-weight: Normal; 
    margin: 0px;
 }
+img.animated-gif{
+  width: 150px;
+  height: auto;
+}
 h4{
     font-weight: bold;
 
@@ -24,7 +28,12 @@ h2{
    margin: 0px;
 }
 .dataviz{
-    width: 450px;
+    width: 350px;
+}
+.datavizbox{
+      width: 350px;
+      
+
 }
 /* Header */
 header {
