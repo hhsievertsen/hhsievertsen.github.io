@@ -163,8 +163,8 @@ label::after {
     content: '+';
     font-size: 26px;
     position: absolute;
-    right: 0px;
-    top: -3px;
+    right: 197px;
+    top: -6px;
 }
 
 input:checked + label::after {
@@ -173,7 +173,8 @@ input:checked + label::after {
     bottom: 6px;
        font-size: 28px;
     position: absolute;
-    top:-5px;
+      right: 198px;
+    top:-8px;
 }
 
 .content {
