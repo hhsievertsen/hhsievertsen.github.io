@@ -12,10 +12,7 @@ h1{
    font-weight: Normal; 
    margin: 0px;
 }
-img.animated-gif{
-  width: 150px;
-  height: auto;
-}
+
 h4{
     font-weight: bold;
 
@@ -29,9 +26,11 @@ h2{
 }
 .dataviz{
     width: 350px;
+     max-width: 95%;
 }
 .datavizbox{
       width: 350px;
+      max-width: 95%;
       
 
 }
@@ -48,8 +47,8 @@ section {
       margin-left: auto;
     margin-right: auto;
   display: block;
-      width: 600px;
-    max-width: 70%;
+      width: 650px;
+    max-width: 100%;
 }
 .leftmarginbox{
     margin-left: 20px;
@@ -130,8 +129,8 @@ div.panel.show {
     margin-bottom: 25px;
     max-height: 250px;
     overflow: scroll;
-    width: 750px;
-    max-width: 80%;
+    width: 650px;
+    max-width: 98%;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
 .mainblock::-webkit-scrollbar {
@@ -191,7 +190,7 @@ input:checked + label::after {
     margin: 0 0 1px 0;
     border-radius: 3px;
         width: 750px;
-    max-width: 80%;
+    max-width: 95%;
 
 }
 
