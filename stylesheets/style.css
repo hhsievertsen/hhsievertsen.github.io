@@ -1,41 +1,73 @@
-/* Globals*/
+
+/* Globals */
 body {
     font-family: 'EB Garamond', serif;
     font-size: 13px;
+     display: block;
 }
-
-
-h1,h2,h3,h4,h5 {
-    color: #8a0000;
-    margin: 0 0 10px;
-    font-family:"Trebuchet MS", "Helvetica", sans-serif;
+h1{
+  margin-bottom: 0px;
+   font-size: 22px;
+   font-family: 'EB Garamond', serif;
+   font-weight: Normal; 
+   margin: 0px;
 }
-
-.wrapper {
-    width: 950px;
-    margin: 0 auto;
-}
-img {
-    max-width: 100%;
-}
-.papertitle {
+h4{
     font-weight: bold;
+
+  font-size: 17px;
 }
+h2{
+  font-size: 18px;
+   font-family: 'EB Garamond', serif;
+   font-weight: Normal; 
+   margin: 0px;
+}
+.dataviz{
+    width: 450px;
+}
+/* Header */
 header {
-    width: 250px;
-    float: left;
-    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 400px;
+    max-width: 50%;
 }
+/* Section */
 section {
-    padding-top: 20px;
-    width: 600px;
-    float: right;
+      margin-left: auto;
+    margin-right: auto;
+  display: block;
+      width: 600px;
+    max-width: 70%;
+}
+.leftmarginbox{
+    margin-left: 20px;
+}
+.leftaligndiv{
+  text-align: left;
+  display:inline-block;
+}
+.centeralign{
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.journalname {
+    display: inline;
+   /* font-weight: bold;
+    color: #595853;*/
+    font-style: italic; 
 }
 section  a{
     color: black;
 }
 a {
-    color: #8a0000;
+  /*  color: #8a0000;*/
+    color: black;
     font-weight: 400;
     text-decoration: none;
 }
@@ -54,27 +86,28 @@ button {
     transition: 0.4s;
     font-family: 'EB Garamond', serif;
 }
-
-.journalname {
-    display: inline;
-    font-weight: bold;
-    color: #595853;
+.papertitle {
+     font-weight: bold; 
+   /*   font-size: 17px; */
+   /*   margin-bottom: 15px; */
+    text-align: left;
+    display:inline-block;
 }
-  
-
-/* Abstract panel */
+.paperlevel1{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+/* abstract box */
 
 div.panel {
     font-family: 'EB Garamond', serif;
-      padding: 0 20px;
+      padding: 0px;
       margin-top: 5px;
       display: none;
       background-color: white;
       font-size: 100%;
       background-color: #F1F1F1; 
        background-color: white;
-      color: #666; 
-      padding: 10px;
       text-align: justify;
 
 }
@@ -83,9 +116,13 @@ div.panel.show {
 }
 
 .mainblock{
-    padding-top: 25px;
-    max-height: 500px;
+    padding-top: 5px;
+    padding-left: 0px;
+    margin-bottom: 25px;
+    max-height: 250px;
     overflow: scroll;
+    width: 750px;
+    max-width: 80%;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
 .mainblock::-webkit-scrollbar {
@@ -98,55 +135,60 @@ div.panel.show {
   scrollbar-width: none;  /* Firefox */
 }
 
-/* News */
-.news {
-    padding-left: 5.6em;
-    text-indent:-4.8em;
-    padding-bottom: 0.7em;
+/* Section expansions */
+input {
+    display: none;
 }
 
+label {
+     font-family: 'EB Garamond', serif;
+    display: block;    
+    padding: 0 0 0 0;
+    margin: 5px 0 0 0;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: left;
+    border-radius: 0px;
+    transition: ease .5s;
+    position: relative; /* ADDING THIS IS REQUIRED */
+    width: 210px;
+}
+/*
+label:hover {
+    background: #4E8774;
+}
+*/
 
-
-
-
-@media only screen and (max-width: 1000px) {
-    div.wrapper {
-        width: auto;
-        margin: 0;
-    }
-    header,
-    section,
-    footer {
-        float: none;
-        position: static;
-        width: auto;
-    }
-   
-    section {
-        border: 1px solid #e5e5e5;
-        border-width: 1px 0;
-        padding: 20px 0;
-        margin: 0 0 20px;
-    }
-    header a small {
-        display: inline;
-    }
-    header ul {
-        position: absolute;
-        right: 50px;
-        top: 52px;
-    }
-  }
-
-
-  .column {
-  float: left;
-  width: 33.33%;
+label::after {
+    content: '+';
+    font-size: 26px;
+    position: absolute;
+    right: 0px;
+    top: -3px;
 }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+input:checked + label::after {
+    content: '-';
+    right: 0px;
+    bottom: 6px;
+       font-size: 28px;
+    position: absolute;
+    top:-5px;
+}
+
+.content {
+    padding: 0px 0px;
+    margin: 0 0 1px 0;
+    border-radius: 3px;
+        width: 750px;
+    max-width: 80%;
+
+}
+
+input + label + .content {
+    display: none;
+}
+
+input:checked + label + .content {
+    display: block;
 }
