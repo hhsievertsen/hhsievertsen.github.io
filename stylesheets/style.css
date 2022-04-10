@@ -88,6 +88,7 @@ button {
     cursor: pointer;
     padding: 0px;
     border: none;
+    color: black;
     text-align: left;
     outline: none;
     font-size: 100%;
