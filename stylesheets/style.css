@@ -71,10 +71,7 @@ section {
     font-style: italic; 
 
 }
-.journalname::before {
- content: "\A";
-  white-space: pre;
-}
+
 section  a{
     color: black;
 }
