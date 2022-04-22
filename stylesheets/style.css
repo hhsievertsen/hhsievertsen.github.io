@@ -69,6 +69,11 @@ section {
    /* font-weight: bold;
     color: #595853;*/
     font-style: italic; 
+
+}
+.journalname::before {
+ content: "\A";
+  white-space: pre;
 }
 section  a{
     color: black;
@@ -96,12 +101,14 @@ button {
     font-family: 'EB Garamond', serif;
 }
 .papertitle {
-     font-weight: bold; 
+   /*  font-weight: bold; */
    /*   font-size: 17px; */
    /*   margin-bottom: 15px; */
     text-align: left;
-    display:inline-block;
+  display:block;
+  color: #cc3f35;
 }
+
 .paperlevel1{
     margin-bottom: 20px;
     margin-top: 20px;
