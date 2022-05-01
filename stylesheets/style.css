@@ -184,7 +184,7 @@ input:checked + label::after {
     content: '-';
     right: 0px;
     bottom: 6px;
-       font-size: 28px;
+       font-size: 26px;
     position: absolute;
       right: 198px;
     top:-8px;
