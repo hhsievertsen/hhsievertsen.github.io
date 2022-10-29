@@ -5,7 +5,7 @@ body {
     font-size: 13px;
     line-height: 1.3em;
      display: block;
-     font-family: 'Playfair Display', serif;
+    
 }
 h1{
   margin-bottom: 0px;
@@ -13,7 +13,7 @@ h1{
    font-family: 'EB Garamond', serif;
    font-weight: Normal; 
    margin: 0px;
-   font-family: 'Playfair Display', serif;
+
 }
 
 h4{
@@ -26,7 +26,7 @@ h2{
    font-family: 'EB Garamond', serif;
    font-weight: Normal; 
    margin: 0px;
-   font-family: 'Playfair Display', serif;
+
 }
 .dataviz{
     width: 350px;
@@ -75,7 +75,9 @@ section {
     font-style: italic; 
 
 }
-
+.material1{
+       font-family: 'EB Garamond', serif;
+}
 section  a{
     color: black;
 }
