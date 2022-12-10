@@ -18,8 +18,10 @@ ggplot()+
       gghighlight(use_direct_label = F) +
       facet_wrap(~ `Country Name`)+
       theme_tufte()+
+  theme(plot.title = element_text(hjust=0.5))+
       scale_x_continuous(breaks=seq(1960,2020,25))+
-     labs(y="Life expectancy at birth", x="",
+     labs(y="Life expectancy at birth (years)", x="",
+          title="Life Expectancy in 16 randomly\n selected countries",
           caption="Data source: The World Bank")
 
 ggsave("fig.png")
