@@ -1,7 +1,7 @@
 
 /* Globals */
 body {
-    background-color: lightblue;
+   /* background-color: lightblue;/*
     font-family: 'EB Garamond', serif;
     font-size: 13px;
     line-height: 1.3em;
@@ -255,5 +255,14 @@ input:checked + label + .content {
   padding: 0px;
   margin-right: auto;
   display: block;
+}
+.mainblock{
+    padding-top: 5px;
+    padding-left: 0px;
+    margin-bottom: 25px;
+    max-height: 150px;
+    overflow: scroll;
+    width: 650px;
+    max-width: 98%;
 }
 }
