@@ -29,11 +29,11 @@ h2{
 
 }
 .dataviz{
-    width: 350px;
-     max-width: 95%;
+    /* width: 350px;*/
+     max-width: 90%;
 }
 .datavizbox{
-      width: 350px;
+     /* width: 350px;*/
       max-width: 95%;
       
 
@@ -60,6 +60,17 @@ section {
 .leftaligndiv{
   text-align: left;
   display:inline-block;
+}
+
+.outerdiv{
+  border: 0px solid;
+  margin: auto;
+  width: 50%;
+  min-width: 600px;
+  max-width: 100%;
+  padding: 0px;
+  margin-right: auto;
+  display: block;
 }
 .centeralign{
   text-align: center;
