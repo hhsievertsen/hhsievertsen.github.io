@@ -66,7 +66,7 @@ section {
   border: 0px solid;
   margin: auto;
   width: 50%;
-  min-width: 30px;
+  min-width: 300px;
   max-width: 100%;
   padding: 0px;
   margin-right: auto;
@@ -222,4 +222,37 @@ input + label + .content {
 
 input:checked + label + .content {
     display: block;
+}
+
+
+@media only screen and (max-width: 600px) {
+  body {
+   /* background-color: lightblue;*/
+  }
+  h1{
+  margin-bottom: 0px;
+   font-size: 16px;
+     line-height: 1.1em;
+   font-family: 'EB Garamond', serif;
+   font-weight: Normal; 
+   margin: 0px;
+
+    }
+    body {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    line-height: 1.1em;
+     display: block;
+    
+
+}
+.outerdiv{
+  border: 0px solid;
+  margin: auto;
+  width: 90%;
+
+  padding: 0px;
+  margin-right: auto;
+  display: block;
+}
 }
