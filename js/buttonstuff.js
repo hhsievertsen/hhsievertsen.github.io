@@ -23,3 +23,4 @@ for (i = 0; i < acc.length; i++) {
         this.parentNode.nextElementSibling.nextElementSibling.nextElementSibling.classList.toggle("show");
     }
 }
+
