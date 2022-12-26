@@ -1,11 +1,16 @@
 
 /* Globals */
 body {
-   /* background-color: lightblue;/*
+ max-width: 100%;
+  font-family: 'EB Garamond', serif;
+       display: block;
+}
+   /* background-color: lightblue;
     font-family: 'EB Garamond', serif;
     font-size: 13px;
     line-height: 1.3em;
      display: block;
+
     
 }
 h1{
@@ -14,6 +19,8 @@ h1{
    font-family: 'EB Garamond', serif;
    font-weight: Normal; 
    margin: 0px;
+
+   font-weight: bold;
 
 }
 
@@ -26,6 +33,16 @@ h2{
   font-size: 18px;
    font-family: 'EB Garamond', serif;
    font-weight: Normal; 
+   margin: 0px;
+
+}*/
+h1{
+          font-family: 'EB Garamond', serif;
+}
+h2{
+  font-size: 18px;
+   font-family: 'EB Garamond', serif;
+   /*font-weight: Normal; */
    margin: 0px;
 
 }
