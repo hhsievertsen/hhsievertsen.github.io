@@ -38,10 +38,12 @@ h2{
 }*/
 h1{
           font-family: 'EB Garamond', serif;
+          font-family: 'Playfair Display', serif;
 }
 h2{
   font-size: 18px;
    font-family: 'EB Garamond', serif;
+   font-family: 'Playfair Display', serif;
    /*font-weight: Normal; */
    margin: 0px;
 
@@ -131,6 +133,7 @@ button {
     font-size: 100%;
     transition: 0.4s;
     font-family: 'EB Garamond', serif;
+
 }
 .papertitle {
    /*  font-weight: bold; */
@@ -192,7 +195,7 @@ label {
      font-family: 'EB Garamond', serif;
     display: block;    
     padding: 0 0 0 0;
-    margin: 5px 0 0 0;
+    margin: 0px 0 0 0;
     cursor: pointer;
     font-size: 18px;
     text-align: left;
@@ -200,6 +203,7 @@ label {
     transition: ease .5s;
     position: relative; /* ADDING THIS IS REQUIRED */
     width: 210px;
+          font-family: 'Playfair Display', serif;
 }
 /*
 label:hover {
