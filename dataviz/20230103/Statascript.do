@@ -1,12 +1,12 @@
-// Time use 2022
+// Time use 2022 and 2021, by HH Sievertsen 3-1-2023, 
+// All credit to Asjad Naqvi  https://medium.com/the-stata-gallery/drawing-nyts-spiral-plot-in-stata-aee1c640f345 
  
-cd "C:\Users\B059633\Documents\Dropbox_manual_sync"
 
 // Load data
-import delimited "C:\Users\B059633\Documents\Dropbox_manual_sync\Toggl_time_entries_2022-01-01_to_2022-12-31.csv", clear
+import delimited "Toggl_time_entries_2022-01-01_to_2022-12-31.csv", clear
 tempfile tf
 save `tf',replace
-import delimited "C:\Users\B059633\Documents\Dropbox_manual_sync\Toggl_time_entries_2021-01-01_to_2022-01-01", clear
+import delimited "Toggl_time_entries_2021-01-01_to_2022-01-01", clear
 append using `tf',force
 
 // Fix dates
