@@ -172,7 +172,6 @@ div.panel.show {
     margin-bottom: 25px;
     max-height: 200px;
     overflow: scroll;
-    width: 650px;
     max-width: 98%;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -291,7 +290,6 @@ input:checked + label + .content {
     margin-bottom: 25px;
     max-height: 110px;
     overflow: scroll;
-    width: 650px;
     max-width: 98%;
 }
 label {
