@@ -5,37 +5,7 @@ body {
   font-family: 'EB Garamond', serif;
        display: block;
 }
-   /* background-color: lightblue;
-    font-family: 'EB Garamond', serif;
-    font-size: 13px;
-    line-height: 1.3em;
-     display: block;
 
-    
-}
-h1{
-  margin-bottom: 0px;
-   font-size: 22px;
-   font-family: 'EB Garamond', serif;
-   font-weight: Normal; 
-   margin: 0px;
-
-   font-weight: bold;
-
-}
-
-h4{
-    font-weight: bold;
-
-  font-size: 17px;
-}
-h2{
-  font-size: 18px;
-   font-family: 'EB Garamond', serif;
-   font-weight: Normal; 
-   margin: 0px;
-
-}*/
 h1{
           font-family: 'EB Garamond', serif;
           font-family: 'Playfair Display', serif;
@@ -231,9 +201,7 @@ input:checked + label::after {
 .content {
     padding: 0px 0px;
     margin: 0 0 1px 0;
-    border-radius: 3px;
-        width: 750px;
-    max-width: 95%;
+    border-radius: 0px;
 
 }
 
@@ -246,7 +214,7 @@ input:checked + label + .content {
 }
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   body {
    /* background-color: lightblue;*/
   }
