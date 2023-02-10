@@ -55,7 +55,7 @@ section {
 .outerdiv{
   border: 0px solid;
   margin: auto;
-  width: 45%;
+  width: 40%;
   min-width: 300px;
   max-width: 100%;
   padding: 0px;
@@ -214,84 +214,64 @@ input:checked + label + .content {
 }
 
 
-@media only screen and (max-width: 1400px) {
-      body {
-       /* background-color: lightblue;*/
-      }
-  
-    .outerdiv{
-      border: 0px solid;
-      margin: auto;
-      width: 70%;
-  min-width: 400px;
-  max-width: 100%;
-      padding: 0px;
-      margin-right: auto;
-      display: block;
+@media only screen and (max-width: 700px) {
+  body {
+   /* background-color: lightblue;*/
+  }
+  h1{
+  margin-bottom: 0px;
+   font-size: 20px;
+     line-height: 1.1em;
+   font-family: 'EB Garamond', serif;
+   font-weight: Normal; 
+   margin: 0px;
+
     }
-  
+    h2{
+  font-size: 15px;
+   font-family: 'EB Garamond', serif;
+   font-family: 'Playfair Display', serif;
+   font-weight: Normal; 
+   margin: 0px;
+
 }
+    body {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    line-height: 1.1em;
+     display: block;
+    
 
+}
+.outerdiv{
+  border: 0px solid;
+  margin: auto;
+  width: 90%;
 
-@media only screen and (max-width: 500px) {
-      body {
-       /* background-color: lightblue;*/
-      }
-      h1{
-      margin-bottom: 0px;
-       font-size: 20px;
-         line-height: 1.1em;
-       font-family: 'EB Garamond', serif;
-       font-weight: Normal; 
-       margin: 0px;
-
-        }
-        h2{
-      font-size: 15px;
-       font-family: 'EB Garamond', serif;
-       font-family: 'Playfair Display', serif;
-       font-weight: Normal; 
-       margin: 0px;
-
-    }
-        body {
-        font-family: 'EB Garamond', serif;
-        font-size: 11px;
-        line-height: 1.1em;
-         display: block;
-        
-
-    }
-    .outerdiv{
-      border: 0px solid;
-      margin: auto;
-      width: 90%;
-  min-width: 400px;
-  max-width: 100%;
-      padding: 0px;
-      margin-right: auto;
-      display: block;
-    }
-    .mainblock{
-        padding-top: 5px;
-        padding-left: 0px;
-        margin-bottom: 25px;
-        max-height: 110px;
-        overflow: scroll;
-        max-width: 98%;
-    }
-    label {
-         font-family: 'EB Garamond', serif;
-        display: block;    
-        padding: 0 0 0 0;
-        margin: 0px 0 0 0;
-        cursor: pointer;
-        font-size: 15px;
-        text-align: left;
-        border-radius: 0px;
-        transition: ease .5s;
-        position: relative; /* ADDING THIS IS REQUIRED */
-        width: 210px;
-              font-family: 'Playfair Display', serif;
+  padding: 0px;
+  margin-right: auto;
+  display: block;
+}
+.mainblock{
+    padding-top: 5px;
+    padding-left: 0px;
+    margin-bottom: 25px;
+    max-height: 110px;
+    overflow: scroll;
+    max-width: 98%;
+}
+label {
+     font-family: 'EB Garamond', serif;
+    display: block;    
+    padding: 0 0 0 0;
+    margin: 0px 0 0 0;
+    cursor: pointer;
+    font-size: 15px;
+    text-align: left;
+    border-radius: 0px;
+    transition: ease .5s;
+    position: relative; /* ADDING THIS IS REQUIRED */
+    width: 210px;
+          font-family: 'Playfair Display', serif;
 }
 }
