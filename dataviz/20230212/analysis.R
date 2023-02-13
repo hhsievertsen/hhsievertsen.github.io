@@ -18,19 +18,20 @@ grade4 <- readTIMSS(path = "C:\\Users\\B059633\\Desktop\\TIMSS\\2019", countries
 grade8 <- readTIMSS(path = "C:\\Users\\B059633\\Desktop\\TIMSS\\2019", countries = c("*"), gradeLvl = "8")
 
 # Search
-searchSDF(string="TOTWGT", data=grade8)
+searchSDF(string="IDSCHOOl", data=grade8)
 
 
 # Extract data
 
-gddat4 <- getData(data = grade4, varnames = c("itsex", "asbm02a","asmmat01","asbgscm","asbm05g","asbm05h","idcntry"),
+gddat4 <- getData(data = grade4, varnames = c("idschool", "itsex", "asbm02a","asmmat01","asmmat02","asmmat03","asmmat04","asmmat05","asbgscm","asbm05g","asbm05h","idcntry"),
                  omittedLevels = TRUE, addAttributes = FALSE)
-gddat8 <- getData(data = grade8, varnames = c("itsex", "bsbm16a","bsmmat01","bsbgscm","bsbm19g","bsbm19h","idcntry"),
+gddat8 <- getData(data = grade8, varnames = c("idschool","itsex", "bsbm16a","bsmmat01","bsmmat02","bsmmat03","bsmmat04"
+                                              ,"bsmmat05","bsbgscm","bsbm19g","bsbm19h","idcntry"),
                   omittedLevels = TRUE, addAttributes = FALSE)
 
 
 # Modify data
-df4<-bind_rows(gddat4)%>%
+df4<-bind_rows(gddat4)%>%group_by(idcntry)%>%
   mutate(goodatmath=ifelse(asbm05g%in%c("AGREE A LOT","AGREE A LITTLE"),1,0),
          female=ifelse(itsex=="FEMALE",1,0),
          score=(asmmat01-mean(asmmat01))/sd(asmmat01),
@@ -38,11 +39,12 @@ df4<-bind_rows(gddat4)%>%
          femaleXscore=female*score,
          itsex=ifelse(itsex=="FEMALE","Girls","Boys"))
 
-df8<-bind_rows(gddat8)%>%
+df8<-bind_rows(gddat8)%>%group_by(idcntry)%>%
   mutate(goodatmath=ifelse(bsbm19g%in%c("AGREE A LOT","AGREE A LITTLE"),1,0),
          female=ifelse(itsex=="FEMALE",1,0),
-         score=(bsmmat01-mean(bsmmat01))/sd(bsmmat01),
-         score=100*rank(bsmmat01)/length(bsmmat01),
+         scoreraw=(bsmmat01+bsmmat02+bsmmat03+bsmmat04+bsmmat05)/5,
+         score=(scoreraw-mean(scoreraw))/sd(scoreraw),
+         score=100*rank(scoreraw)/length(scoreraw),
          femaleXscore=female*score,
          itsex=ifelse(itsex=="FEMALE","Girls","Boys"))
 
@@ -57,9 +59,9 @@ ggplot()+
    geom_smooth(data=df8,mapping=aes(x=score,y=goodatmath,color=itsex,fill=itsex),
                alpha=.2,size=1.75)+
   labs(x="Test score percentile in Maths",y="Share answering 'I am good at Maths'",
-       title="Girls are less likely to say they are good at Maths",
-       subtitle="for any given level of Maths skills",
-       caption="Data Source: TIMMS 2019. Based on 250 926 8th graders across 46 countries. \n Notes: The x-variable is the global percentile rank of the 1st plausible value in mathematics.\n  The y-variable is the share answering 'Agree a lot' or 'Agree a little'. The chart is unweighted. \n by hhsievertsen",
+       title="Girls are less likely to say they are good at maths",
+       subtitle="for a given level of maths skills below the 90th percentile!",
+       caption="Data Source: TIMMS 2019. Based on 250 926 8th graders across 46 countries. \n Notes: The x-variable is the national percentile rank of the average of five plausible value in maths.\n  The y-variable is the share answering 'Agree a lot' or 'Agree a little'. The chart is unweighted. \n by hhsievertsen",
        color="")+ 
   scale_y_percent() +
   theme_ipsum_rc()+
