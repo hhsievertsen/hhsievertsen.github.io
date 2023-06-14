@@ -159,7 +159,11 @@ div.panel.show {
 input {
     display: none;
 }
-
+table {
+    border-collapse: separate;
+    text-indent: initial;
+    border-spacing: 1px;
+}
 label {
      font-family: 'EB Garamond', serif;
     display: block;    
@@ -237,8 +241,8 @@ input:checked + label + .content {
 }
     body {
     font-family: 'EB Garamond', serif;
-    font-size: 11px;
-    line-height: 1.1em;
+    font-size: 12px;
+    /*line-height: 1.1em;*/
      display: block;
     
 

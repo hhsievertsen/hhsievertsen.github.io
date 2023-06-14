@@ -14,12 +14,12 @@ labeldata<-data.frame(team="Borussia Dortmund",
 p<-ggplot(df,aes(x=gw,y=position,color=team,group=team))+
   geom_label(data=labeldata,mapping=aes(x=x,y=y,label=label),
              fill="black",color="black")+
-  geom_step(size=2)+
+  geom_line(size=2)+
   theme_minimal() +
   scale_y_reverse(expand = c(0, 0),limits=c(9,0.5),breaks=seq(9,1,-1))+
   scale_colour_manual(values=c("red","yellow"))+ 
   geom_point(color="grey",size=2)+
-  geom_text(aes(x=47,label=label),size=6)+
+  geom_text(aes(x=46.5,label=label),size=6)+
   geom_segment(aes(xend=34.5,yend=position,colour=team),linetype=2)+
   labs(x="Game Week",y="League Position",color="",title="Bayern & Dortmund 2022/23", 
        subtitle='Matchday: {(frame_along)}',caption="by https://github.com/hhsievertsen")+
@@ -37,7 +37,7 @@ p<-ggplot(df,aes(x=gw,y=position,color=team,group=team))+
   transition_reveal(gw)+
   theme(panel.background = element_rect(fill="black"))
 
-animate(p,end_pause =200, nframes = 1000, fps=20)
+#animate(p,end_pause =10, nframes = 15, fps=2)
 
 
-anim_save("buli.gif", p)
+anim_save("buli.gif", p,end_pause =400, nframes = 1500, fps=30)
